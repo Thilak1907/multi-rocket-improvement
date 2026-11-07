@@ -1,4 +1,18 @@
+# IDE
+/.idea/
+
+# Virtual environment
+/.venv/
+
+# Dataset
+/data/
+
+# Generated output
 /output/
-/.idea
-/.data
-/.results
+
+# Experiment results
+/results/
+
+# Python cache
+__pycache__/
+*.py[cod]
