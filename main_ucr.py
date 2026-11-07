@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
         classifier = MultiRocket(
             num_features=num_features,
-            classifier="logistic",
+            classifier="ridge",
             verbose=verbose
         )
         yhat_train = classifier.fit(
