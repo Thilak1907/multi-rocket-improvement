@@ -12,12 +12,20 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from multirocket.logistic_regression import LogisticRegression
+from multirocket.kernel_groups import (
+    NUM_KERNELS,
+    select_kernel_indices,
+    validate_random_state,
+)
 
 
-@njit("float32[:](float64[:,:,:],int32[:],int32[:],int32[:],int32[:],float32[:])",
+@njit("float32[:](float64[:,:,:],int32[:],int32[:],int32[:],int32[:],float32[:],int32[:],int32)",
       fastmath=True, parallel=False, cache=True)
-def _fit_biases(X, num_channels_per_combination, channel_indices, dilations, num_features_per_dilation, quantiles):
+def _fit_biases(X, num_channels_per_combination, channel_indices, dilations,
+                num_features_per_dilation, quantiles, kernel_indices, random_state):
     num_examples, num_channels, input_length = X.shape
+    if random_state >= 0:
+        np.random.seed(random_state)
 
     # equivalent to:
     # >>> from itertools import combinations
@@ -37,7 +45,7 @@ def _fit_biases(X, num_channels_per_combination, channel_indices, dilations, num
         4, 6, 7, 4, 6, 8, 4, 7, 8, 5, 6, 7, 5, 6, 8, 5, 7, 8, 6, 7, 8
     ), dtype=np.int32).reshape(84, 3)
 
-    num_kernels = len(indices)
+    num_kernels = len(kernel_indices)
     num_dilations = len(dilations)
 
     num_features = num_kernels * np.sum(num_features_per_dilation)
@@ -92,7 +100,7 @@ def _fit_biases(X, num_channels_per_combination, channel_indices, dilations, num
 
                 start += dilation
 
-            index_0, index_1, index_2 = indices[kernel_index]
+            index_0, index_1, index_2 = indices[kernel_indices[kernel_index]]
 
             C = C_alpha + C_gamma[index_0] + C_gamma[index_1] + C_gamma[index_2]
             C = np.sum(C, axis=0)
@@ -108,8 +116,7 @@ def _fit_biases(X, num_channels_per_combination, channel_indices, dilations, num
     return biases
 
 
-def _fit_dilations(input_length, num_features, max_dilations_per_kernel):
-    num_kernels = 84
+def _fit_dilations(input_length, num_features, max_dilations_per_kernel, num_kernels):
 
     num_features_per_kernel = num_features // num_kernels
     true_max_dilations_per_kernel = min(num_features_per_kernel, max_dilations_per_kernel)
@@ -136,12 +143,18 @@ def _quantiles(n):
     return np.array([(_ * ((np.sqrt(5) + 1) / 2)) % 1 for _ in range(1, n + 1)], dtype=np.float32)
 
 
-def fit(X, num_features=10_000, max_dilations_per_kernel=32):
+def fit(X, num_features=10_000, max_dilations_per_kernel=32,
+        kernel_indices=None, random_state=None):
     _, num_channels, input_length = X.shape
+    random_state = validate_random_state(random_state)
 
-    num_kernels = 84
+    if kernel_indices is None:
+        kernel_indices = np.arange(NUM_KERNELS, dtype=np.int32)
+    num_kernels = len(kernel_indices)
 
-    dilations, num_features_per_dilation = _fit_dilations(input_length, num_features, max_dilations_per_kernel)
+    dilations, num_features_per_dilation = _fit_dilations(
+        input_length, num_features, max_dilations_per_kernel, num_kernels
+    )
 
     num_features_per_kernel = np.sum(num_features_per_dilation)
 
@@ -153,7 +166,15 @@ def fit(X, num_features=10_000, max_dilations_per_kernel=32):
     max_num_channels = min(num_channels, 9)
     max_exponent = np.log2(max_num_channels + 1)
 
-    num_channels_per_combination = (2 ** np.random.uniform(0, max_exponent, num_combinations)).astype(np.int32)
+    if random_state is None:
+        num_channels_per_combination = (2 ** np.random.uniform(
+            0, max_exponent, num_combinations
+        )).astype(np.int32)
+    else:
+        rng = np.random.RandomState(random_state)
+        num_channels_per_combination = (2 ** rng.uniform(
+            0, max_exponent, num_combinations
+        )).astype(np.int32)
 
     channel_indices = np.zeros(num_channels_per_combination.sum(), dtype=np.int32)
 
@@ -161,22 +182,28 @@ def fit(X, num_features=10_000, max_dilations_per_kernel=32):
     for combination_index in range(num_combinations):
         num_channels_this_combination = num_channels_per_combination[combination_index]
         num_channels_end = num_channels_start + num_channels_this_combination
-        channel_indices[num_channels_start:num_channels_end] = np.random.choice(num_channels,
-                                                                                num_channels_this_combination,
-                                                                                replace=False)
+        if random_state is None:
+            channel_indices[num_channels_start:num_channels_end] = np.random.choice(
+                num_channels, num_channels_this_combination, replace=False
+            )
+        else:
+            channel_indices[num_channels_start:num_channels_end] = rng.choice(
+                num_channels, num_channels_this_combination, replace=False
+            )
 
         num_channels_start = num_channels_end
 
     biases = _fit_biases(X, num_channels_per_combination, channel_indices,
-                         dilations, num_features_per_dilation, quantiles)
+                         dilations, num_features_per_dilation, quantiles,
+                         kernel_indices, -1 if random_state is None else random_state)
 
     return num_channels_per_combination, channel_indices, dilations, num_features_per_dilation, biases
 
 
 @njit(
-    "float32[:,:](float64[:,:,:],float64[:,:,:],Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),int32)",
+    "float32[:,:](float64[:,:,:],float64[:,:,:],Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),Tuple((int32[:],int32[:],int32[:],int32[:],float32[:])),int32[:],int32)",
     fastmath=True, parallel=True, cache=True)
-def transform(X, X1, parameters, parameters1, n_features_per_kernel=4):
+def transform(X, X1, parameters, parameters1, kernel_indices, n_features_per_kernel=4):
     num_examples, num_channels, input_length = X.shape
 
     num_channels_per_combination, channel_indices, dilations, num_features_per_dilation, biases = parameters
@@ -200,7 +227,7 @@ def transform(X, X1, parameters, parameters1, n_features_per_kernel=4):
         4, 6, 7, 4, 6, 8, 4, 7, 8, 5, 6, 7, 5, 6, 8, 5, 7, 8, 6, 7, 8
     ), dtype=np.int32).reshape(84, 3)
 
-    num_kernels = len(indices)
+    num_kernels = len(kernel_indices)
     num_dilations = len(dilations)
     num_dilations1 = len(dilations1)
 
@@ -263,9 +290,9 @@ def transform(X, X1, parameters, parameters1, n_features_per_kernel=4):
 
                 channels_this_combination = channel_indices[num_channels_start:num_channels_end]
 
-                _padding1 = (_padding0 + kernel_index) % 2
+                _padding1 = (_padding0 + kernel_indices[kernel_index]) % 2
 
-                index_0, index_1, index_2 = indices[kernel_index]
+                index_0, index_1, index_2 = indices[kernel_indices[kernel_index]]
 
                 C = C_alpha[channels_this_combination] + \
                     C_gamma[index_0][channels_this_combination] + \
@@ -397,9 +424,9 @@ def transform(X, X1, parameters, parameters1, n_features_per_kernel=4):
 
                 channels_this_combination = channel_indices[num_channels_start:num_channels_end]
 
-                _padding1 = (_padding0 + kernel_index) % 2
+                _padding1 = (_padding0 + kernel_indices[kernel_index]) % 2
 
-                index_0, index_1, index_2 = indices[kernel_index]
+                index_0, index_1, index_2 = indices[kernel_indices[kernel_index]]
 
                 C = C_alpha[channels_this_combination] + \
                     C_gamma[index_0][channels_this_combination] + \
@@ -487,6 +514,8 @@ class MultiRocket:
             self,
             num_features=50000,
             classifier="ridge",
+            kernel_grouping="none",
+            random_state=None,
             verbose=0
     ):
         self.name = "MultiRocket"
@@ -497,6 +526,9 @@ class MultiRocket:
         self.n_features_per_kernel = 4
         self.num_features = num_features / 2  # 1 per transformation
         self.num_kernels = int(self.num_features / self.n_features_per_kernel)
+        self.kernel_grouping = kernel_grouping
+        self.kernel_indices = select_kernel_indices(kernel_grouping)
+        self.random_state = validate_random_state(random_state)
 
         if verbose > 1:
             print('[{}] Creating {} with {} kernels'.format(self.name, self.name, self.num_kernels))
@@ -537,11 +569,15 @@ class MultiRocket:
         _start_time = time.perf_counter()
         self.base_parameters = fit(
             x_train,
-            num_features=self.num_kernels
+            num_features=self.num_kernels,
+            kernel_indices=self.kernel_indices,
+            random_state=self.random_state
         )
         self.diff1_parameters = fit(
             xx,
-            num_features=self.num_kernels
+            num_features=self.num_kernels,
+            kernel_indices=self.kernel_indices,
+            random_state=None if self.random_state is None else self.random_state + 1
         )
         self.generate_kernel_duration += time.perf_counter() - _start_time
 
@@ -549,6 +585,7 @@ class MultiRocket:
         x_train_transform = transform(
             x_train, xx,
             self.base_parameters, self.diff1_parameters,
+            self.kernel_indices,
             self.n_features_per_kernel
         )
         self.apply_kernel_on_train_duration += time.perf_counter() - _start_time
@@ -603,6 +640,7 @@ class MultiRocket:
         x_transform = transform(
             x, xx,
             self.base_parameters, self.diff1_parameters,
+            self.kernel_indices,
             self.n_features_per_kernel
         )
         self.apply_kernel_on_test_duration += time.perf_counter() - _start_time

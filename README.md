@@ -43,8 +43,56 @@ Arguments:
 -n --num_features       : number of features 
 -t --num_threads        : number of threads (> 0)
 -s --save               : 0=don't save results, 1=save results
+--kernel_grouping       : none (published baseline) or temporal_scale (grouped-kernel experiment)
+--seed                  : optional non-negative seed for repeatable kernel/channel sampling
 -v --verbose            : verbosity
 ``` 
+
+### Temporal-scale kernel grouping experiment
+
+The default `--kernel_grouping none` retains the published 84-kernel transform.
+The experimental `temporal_scale` option groups the 84 kernel patterns by their
+temporal span (local: 2-3 positions, medium: 4-5, broad: 6-8) and retains
+approximately half of the patterns, sampled evenly within each group. The
+feature budget is redistributed across the retained patterns. This reduces the
+number of convolution patterns computed while keeping the requested output
+feature count approximately constant; accuracy and runtime effects must be
+measured empirically.
+
+Example UCR runs (use the same dataset, resample, and feature budget):
+
+```bash
+python main_ucr.py --datapath /path/to/UCRArchive_2018 -p ECG200 -n 10000 --kernel_grouping none
+python main_ucr.py --datapath /path/to/UCRArchive_2018 -p ECG200 -n 10000 --kernel_grouping none --seed 7
+python main_ucr.py --datapath /path/to/UCRArchive_2018 -p ECG200 -n 10000 --kernel_grouping temporal_scale --seed 7
+```
+
+The full UCR runner uses the same flags:
+
+```bash
+python main_ucr_109.py --datapath /path/to/UCRArchive_2018 -p "" -i 1 -n 50000 --kernel_grouping none --seed 7
+python main_ucr_109.py --datapath /path/to/UCRArchive_2018 -p "" -i 1 -n 50000 --kernel_grouping temporal_scale --seed 7
+```
+
+The multivariate runner supports them through `main_mtsc.py`. Results
+are written to separate output directories and include the grouping mode in
+`results.csv`. Fixed seeds make the stochastic kernel/channel sampling
+repeatable. The result records include training/inference timings and resident
+memory at the end of the run (`process_rss_mb`); compare these alongside
+accuracy over repeated datasets/resamples before claiming an improvement.
+
+### Current UCR experiment status
+
+The current full-benchmark pilot covers the 109-dataset subset for resamples
+1-5, with seed 7 and 50,000 requested features. Both modes completed on all
+109 datasets for every resample (545 paired dataset/resample comparisons).
+Across those pairs, temporal-scale selection changed test accuracy by a mean
+of -0.00043 (median 0.0): it improved 149 pairs, tied 197, and was lower on
+199. Mean relative changes in kernel-generation, train-transformation, and
+test-transformation time were -27.5%, -6.6%, and -6.0%, respectively. These
+are preliminary measurements on one machine and one stochastic seed; they do
+not establish statistical significance or a general improvement. The full
+paper protocol uses 30 resamples, so this is not a complete reproduction.
 
 ## Results
 These are the results on 30 resamples of the 109 UCR Time Series archive 

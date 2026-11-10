@@ -33,21 +33,29 @@ parser.add_argument("-i", "--iter", type=int, required=False, default=1)
 parser.add_argument("-n", "--num_features", type=int, required=False, default=50000)
 parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
 parser.add_argument("-s", "--save", type=bool, required=False, default=True)
+parser.add_argument("--kernel_grouping", choices=("none", "temporal_scale"), default="none")
+parser.add_argument("--seed", type=int, default=None)
 parser.add_argument("-v", "--verbose", type=int, required=False, default=2)
 
 arguments = parser.parse_args()
 
 if __name__ == '__main__':
-    data_path = arguments.datapath
+    data_path = os.path.abspath(arguments.datapath)
     problem = arguments.problem
     num_features = arguments.num_features
     num_threads = arguments.num_threads
     itr = arguments.iter
     save = arguments.save
+    kernel_grouping = arguments.kernel_grouping
+    random_state = arguments.seed
     verbose = arguments.verbose
 
     output_path = os.getcwd() + "/output/"
     classifier_name = "MultiRocket_{}".format(num_features)
+    if kernel_grouping != "none":
+        classifier_name += "_{}".format(kernel_grouping)
+    if random_state is not None:
+        classifier_name += "_seed{}".format(random_state)
 
     datasets = get_classification_datasets_summary(subset="109")
     if problem == "":
@@ -61,10 +69,13 @@ if __name__ == '__main__':
     if num_threads > 0:
         numba.set_num_threads(num_threads)
 
+    processed_datasets = 0
+    missing_datasets = []
     for i in range(len(datasets)):
         problem = datasets.Name[i].strip()
-        data_folder = data_path + problem + "/"
+        data_folder = os.path.join(data_path, problem)
         if not os.path.exists(data_folder):
+            missing_datasets.append(problem)
             continue
 
         output_dir = "{}/multirocket/resample_{}/{}/{}/".format(
@@ -86,8 +97,8 @@ if __name__ == '__main__':
         print("Number of Features: {}".format(num_features))
 
         # use tsv. Change the data loader for other file format
-        train_file = data_folder + problem + "_TRAIN.tsv"
-        test_file = data_folder + problem + "_TEST.tsv"
+        train_file = os.path.join(data_folder, problem + "_TRAIN.tsv")
+        test_file = os.path.join(data_folder, problem + "_TEST.tsv")
 
         print("Loading data")
         X_train, y_train = read_univariate_ucr(train_file, normalise=False)
@@ -115,6 +126,8 @@ if __name__ == '__main__':
 
         classifier = MultiRocket(
             num_features=num_features,
+            kernel_grouping=kernel_grouping,
+            random_state=random_state,
             verbose=verbose
         )
         yhat_train = classifier.fit(
@@ -138,9 +151,11 @@ if __name__ == '__main__':
         min_freq = cpu_freq.min
         memory = np.round(psutil.virtual_memory().total / 1e9)
 
-        df_metrics = pd.DataFrame(data=np.zeros((1, 21), dtype=float), index=[0],
+        df_metrics = pd.DataFrame(data=np.zeros((1, 24), dtype=float), index=[0],
                                   columns=['timestamp', 'itr', 'classifier',
                                            'num_features',
+                                           'kernel_grouping',
+                                           'random_state',
                                            'dataset',
                                            'train_acc', 'train_time',
                                            'test_acc', 'test_time',
@@ -152,11 +167,14 @@ if __name__ == '__main__':
                                            'machine', 'processor',
                                            'physical_cores',
                                            "logical_cores",
-                                           'max_freq', 'min_freq', 'memory'])
+                                           'max_freq', 'min_freq', 'memory',
+                                           'process_rss_mb'])
         df_metrics["timestamp"] = datetime.utcnow().replace(tzinfo=pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
         df_metrics["itr"] = itr
         df_metrics["classifier"] = classifier_name
         df_metrics["num_features"] = num_features
+        df_metrics["kernel_grouping"] = kernel_grouping
+        df_metrics["random_state"] = random_state
         df_metrics["dataset"] = problem
         df_metrics["train_acc"] = train_acc
         df_metrics["train_time"] = classifier.train_duration
@@ -174,7 +192,18 @@ if __name__ == '__main__':
         df_metrics["max_freq"] = max_freq
         df_metrics["min_freq"] = min_freq
         df_metrics["memory"] = memory
+        df_metrics["process_rss_mb"] = psutil.Process(os.getpid()).memory_info().rss / (1024 ** 2)
 
         print(df_metrics)
         if save:
             df_metrics.to_csv(output_dir + 'results.csv', index=False)
+        processed_datasets += 1
+
+    if missing_datasets:
+        print("Skipped datasets with no data directory: {}".format(
+            ", ".join(missing_datasets)
+        ))
+    if processed_datasets == 0:
+        raise FileNotFoundError(
+            "No dataset directories were found under: {}".format(data_path)
+        )
