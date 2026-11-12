@@ -12,6 +12,14 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from multirocket.logistic_regression import LogisticRegression
+from multirocket.fast_ridge import FastRidgeClassifierCV
+from multirocket.pooling import OPERATORS, validate_pooling, transform_selected
+
+
+@njit(cache=True)
+def seed_numba(seed):
+    """Numba has a separate RNG; seed it for paired, reproducible comparisons."""
+    np.random.seed(seed)
 
 
 @njit("float32[:](float64[:,:],int32[:],int32[:],float32[:])",
@@ -430,16 +438,50 @@ class MultiRocket:
             self,
             num_features=50000,
             classifier="ridge",
-            verbose=0
+            verbose=0,
+            pooling=OPERATORS,
+            random_state=None,
+            memory_efficient=False,
+            prediction_batch_size=256,
+            optimized_transform=False,
+            fused_prediction=False,
+            first_difference_fix=True,
+            inplace_processing=None,
+            chunked_prediction=None,
+            ridge_feature_limit_bytes=693 * 1024**2,
     ):
         self.name = "MultiRocket"
 
         self.base_parameters = None
         self.diff1_parameters = None
 
-        self.n_features_per_kernel = 4
+        self.pooling = validate_pooling(pooling)
+        self.n_features_per_kernel = len(self.pooling)
+        self.feature_budget = int(num_features)
         self.num_features = num_features / 2  # 1 per transformation
-        self.num_kernels = int(self.num_features / self.n_features_per_kernel)
+        # Keep the original kernel budget: selecting two operators halves features.
+        self.num_kernels = int(self.num_features / 4)
+        if self.num_kernels < 84:
+            raise ValueError("num_features must be at least 672")
+        if classifier.lower() not in ("ridge", "fast_ridge", "auto_ridge", "logistic"):
+            raise ValueError("classifier must be ridge, fast_ridge, auto_ridge, or logistic")
+        if not isinstance(prediction_batch_size, (int, np.integer)) or prediction_batch_size < 1:
+            raise ValueError("prediction_batch_size must be a positive integer")
+        self.random_state = random_state
+        self.memory_efficient = memory_efficient
+        self.inplace_processing = memory_efficient if inplace_processing is None else inplace_processing
+        self.chunked_prediction = memory_efficient if chunked_prediction is None else chunked_prediction
+        self.first_difference_fix = first_difference_fix
+        if not isinstance(ridge_feature_limit_bytes, (int, np.integer)) or ridge_feature_limit_bytes < 1:
+            raise ValueError("ridge_feature_limit_bytes must be a positive integer")
+        self.ridge_feature_limit_bytes = ridge_feature_limit_bytes
+        self.prediction_batch_size = prediction_batch_size
+        self.optimized_transform = optimized_transform
+        self.fused_prediction = fused_prediction
+        if (optimized_transform and self.pooling != OPERATORS):
+            raise ValueError("optimized_transform currently requires all four operators")
+        if fused_prediction and classifier.lower() == "logistic":
+            raise ValueError("fused_prediction requires a ridge classifier")
 
         if verbose > 1:
             print('[{}] Creating {} with {} kernels'.format(self.name, self.name, self.num_kernels))
@@ -457,6 +499,11 @@ class MultiRocket:
         self.verbose = verbose
 
     def fit(self, x_train, y_train, predict_on_train=True):
+        x_train = np.asarray(x_train, dtype=np.float64)
+        if x_train.ndim != 2 or x_train.shape[1] < 10:
+            raise ValueError("Expected a 2D array of series with length at least 10")
+        if self.random_state is not None:
+            seed_numba(self.random_state)
         if self.verbose > 1:
             print('[{}] Training with training set of {}'.format(self.name, x_train.shape))
 
@@ -482,14 +529,19 @@ class MultiRocket:
         self.generate_kernel_duration += time.perf_counter() - _start_time
 
         _start_time = time.perf_counter()
-        x_train_transform = transform(
+        x_train_transform = self._transform(
             x_train, xx,
-            self.base_parameters, self.diff1_parameters,
-            self.n_features_per_kernel
         )
+        del xx
         self.apply_kernel_on_train_duration += time.perf_counter() - _start_time
 
-        x_train_transform = np.nan_to_num(x_train_transform)
+        x_train_transform = np.nan_to_num(x_train_transform, copy=not self.inplace_processing)
+        self.n_features_out_ = x_train_transform.shape[1]
+        self.train_feature_bytes_ = x_train_transform.nbytes
+        self.estimated_train_feature_bytes_ = len(x_train) * self.n_features_out_ * np.dtype(np.float32).itemsize
+        self.selected_ridge_backend_ = self.clf.lower()
+        if self.selected_ridge_backend_ == "auto_ridge":
+            self.selected_ridge_backend_ = ("fast_ridge" if self.estimated_train_feature_bytes_ >= self.ridge_feature_limit_bytes else "ridge")
 
         elapsed_time = time.perf_counter() - start_time
         if self.verbose > 1:
@@ -499,10 +551,11 @@ class MultiRocket:
         if self.verbose > 1:
             print('[{}] Training'.format(self.name))
 
-        if self.clf.lower() == "ridge":
+        if self.selected_ridge_backend_ in ("ridge", "fast_ridge"):
+            ridge = FastRidgeClassifierCV if self.selected_ridge_backend_ == "fast_ridge" else RidgeClassifierCV
             self.classifier = make_pipeline(
-                StandardScaler(),
-                RidgeClassifierCV(
+                StandardScaler(copy=not self.inplace_processing),
+                ridge(
                     alphas=np.logspace(-3, 3, 10)
                 )
             )
@@ -515,16 +568,83 @@ class MultiRocket:
         self.classifier.fit(x_train_transform, y_train)
         self.train_duration = time.perf_counter() - _start_time
 
+        if self.fused_prediction:
+            scaler, fitted = self.classifier[0], self.classifier[-1]
+            self.prediction_coef_ = np.atleast_2d(fitted.coef_).astype(np.float64) / scaler.scale_
+            self.prediction_intercept_ = fitted.intercept_ - self.prediction_coef_ @ scaler.mean_
+
         if self.verbose > 1:
             print('[{}] Training done!, took {:.3f}s'.format(self.name, self.train_duration))
         if predict_on_train:
-            yhat = self.classifier.predict(x_train_transform)
+            if self.inplace_processing and self.selected_ridge_backend_ in ("ridge", "fast_ridge"):
+                # fit already scaled this array in place; do not scale it twice.
+                yhat = self.classifier[-1].predict(x_train_transform)
+            else:
+                yhat = self.classifier.predict(x_train_transform)
         else:
             yhat = None
 
+        del x_train_transform
+        self.fit_total_duration = time.perf_counter() - start_time
         return yhat
 
+    def _transform(self, x, xx):
+        if self.first_difference_fix and self.pooling == OPERATORS:
+            from multirocket.corrected import transform_corrected, transform_buffered_corrected
+            function = transform_buffered_corrected if self.optimized_transform else transform_corrected
+            return function(x, xx, self.base_parameters, self.diff1_parameters, 4)
+        if self.optimized_transform:
+            from multirocket.buffered import transform_buffered
+            return transform_buffered(x, xx, self.base_parameters, self.diff1_parameters, 4)
+        if self.pooling == OPERATORS:
+            return transform(x, xx, self.base_parameters, self.diff1_parameters, 4)
+        return transform_selected(x, xx, self.base_parameters, self.diff1_parameters, self.pooling,
+                                  first_difference_fix=self.first_difference_fix)
+
+    def _predict_features(self, features):
+        if not self.fused_prediction:
+            return self.classifier.predict(features)
+        fitted = self.classifier[-1]
+        scores = features @ self.prediction_coef_.T + self.prediction_intercept_
+        if len(fitted.classes_) == 1:
+            return np.full(len(features), fitted.classes_[0])
+        indices = (scores[:, 0] > 0).astype(int) if scores.shape[1] == 1 else scores.argmax(axis=1)
+        return fitted.classes_[indices]
+
     def predict(self, x):
+        if self.classifier is None:
+            raise ValueError("Call fit before predict")
+        x = np.asarray(x, dtype=np.float64)
+        if x.ndim != 2:
+            raise ValueError("Expected a 2D array")
+        if self.chunked_prediction:
+            start = time.perf_counter()
+            self.apply_kernel_on_test_duration = 0
+            self.test_transforms_duration = 0
+            self.test_duration = 0
+            self.max_prediction_feature_bytes_ = 0
+            predictions = []
+            for first in range(0, len(x), self.prediction_batch_size):
+                chunk = x[first:first + self.prediction_batch_size]
+                t = time.perf_counter()
+                xx = np.diff(chunk, 1)
+                self.test_transforms_duration += time.perf_counter() - t
+                t = time.perf_counter()
+                features = self._transform(chunk, xx)
+                del xx
+                self.apply_kernel_on_test_duration += time.perf_counter() - t
+                features = np.nan_to_num(features, copy=not self.inplace_processing)
+                self.max_prediction_feature_bytes_ = max(self.max_prediction_feature_bytes_, features.nbytes)
+                t = time.perf_counter()
+                predictions.append(self._predict_features(features))
+                self.test_duration += time.perf_counter() - t
+                del features
+            self.predict_total_duration = time.perf_counter() - start
+            if not predictions:
+                return np.empty(0, dtype=self.classifier.classes_.dtype)
+            return np.concatenate(predictions)
+
+        total_start = time.perf_counter()
         if self.verbose > 1:
             print('[{}] Predicting'.format(self.name))
 
@@ -536,22 +656,24 @@ class MultiRocket:
         self.test_transforms_duration += time.perf_counter() - _start_time
 
         _start_time = time.perf_counter()
-        x_transform = transform(
+        x_transform = self._transform(
             x, xx,
-            self.base_parameters, self.diff1_parameters,
-            self.n_features_per_kernel
         )
+        del xx
         self.apply_kernel_on_test_duration += time.perf_counter() - _start_time
 
-        x_transform = np.nan_to_num(x_transform)
+        x_transform = np.nan_to_num(x_transform, copy=not self.inplace_processing)
+        self.max_prediction_feature_bytes_ = x_transform.nbytes
         if self.verbose > 1:
             print('Kernels applied!, took {:.3f}s. Transformed shape: {}.'.format(self.apply_kernel_on_test_duration,
                                                                                   x_transform.shape))
 
         start_time = time.perf_counter()
-        yhat = self.classifier.predict(x_transform)
+        yhat = self._predict_features(x_transform)
         self.test_duration = time.perf_counter() - start_time
         if self.verbose > 1:
             print("[{}] Predicting completed, took {:.3f}s".format(self.name, self.test_duration))
 
+        del x_transform
+        self.predict_total_duration = time.perf_counter() - total_start
         return yhat

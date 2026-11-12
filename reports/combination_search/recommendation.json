@@ -1,0 +1,64 @@
+{
+  "balanced": "fused10",
+  "accuracy_winner": "hybrid20h32",
+  "fastest_eligible": "fused10",
+  "finalists": [
+    "baseline50",
+    "fused10",
+    "hybrid20h32",
+    "fused50",
+    "fused30",
+    "fast30"
+  ],
+  "rule": "Within 0.5 percentage points of baseline mean validation accuracy; minimize sqrt(total time ratio * median paired peak RSS ratio). All selection jobs must succeed.",
+  "conservative": "fused30",
+  "refined_conservative": "fast30",
+  "configurations": {
+    "baseline50": {
+      "num_features": 50000,
+      "classifier": "ridge",
+      "memory_efficient": false
+    },
+    "fused10": {
+      "num_features": 10000,
+      "classifier": "ridge",
+      "random_state": null,
+      "memory_efficient": true,
+      "prediction_batch_size": 256,
+      "optimized_transform": true,
+      "fused_prediction": true
+    },
+    "hybrid20h32": {
+      "hydra_groups": 32,
+      "num_features": 20000
+    },
+    "fused50": {
+      "num_features": 50000,
+      "classifier": "ridge",
+      "random_state": null,
+      "memory_efficient": true,
+      "prediction_batch_size": 256,
+      "optimized_transform": true,
+      "fused_prediction": true
+    },
+    "fused30": {
+      "num_features": 30000,
+      "classifier": "ridge",
+      "random_state": null,
+      "memory_efficient": true,
+      "prediction_batch_size": 256,
+      "optimized_transform": true,
+      "fused_prediction": true
+    },
+    "fast30": {
+      "num_features": 30000,
+      "classifier": "fast_ridge",
+      "random_state": null,
+      "memory_efficient": true,
+      "prediction_batch_size": 256,
+      "optimized_transform": true,
+      "fused_prediction": true
+    }
+  },
+  "recommended_conservative_default": "fast30"
+}

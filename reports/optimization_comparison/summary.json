@@ -1,0 +1,1892 @@
+{
+  "choice": {
+    "operators": [
+      "LSPV",
+      "MPV"
+    ],
+    "selection_mean_accuracy": 0.8733067168098557,
+    "candidate_means": {
+      "LSPV+MIPV": 0.8591488633448621,
+      "LSPV+MPV": 0.8733067168098557,
+      "MPV+MIPV": 0.8427644160597297,
+      "PPV+LSPV": 0.8732655189773944,
+      "PPV+MIPV": 0.8575671219097186,
+      "PPV+MPV": 0.8707121292853005
+    },
+    "selection_datasets": 54,
+    "selection_files_sha256": {
+      "ACSF1": "7306f6a845a3bf79517cc878308d28d1c0442d9a6ecd749e092e3fd528773d36",
+      "Adiac": "08822e827153d945fe705e14cc093a13a39ece363fe299fcd95df404b696b0f1",
+      "ArrowHead": "96963a3ebc10bcafcc5c6c504fc68a7d25ab7d7c0f5366fc26b4877e2aa62366",
+      "Beef": "55027c4d83fa3b8c70a7b0942bb2959717c1a44192332da860e2be2e3dbceaca",
+      "BeetleFly": "230bab027d9024f3018eeec97372116768f22172891f310b89b37f9237bb89bd",
+      "CBF": "3f0647623d2816107789001eba940d5cc022629c06b00b7c8605e3725ed291aa",
+      "ChlorineConcentration": "05d5134cdebb01d82382cb02371267257b6b44b7f99adc686941deb36e7b1fae",
+      "Crop": "602d855f2dc2bd3a5acaaec70820f1f5c72c47d99f983f3c5009cdbb69f51660",
+      "DiatomSizeReduction": "4690a891974b722dc1617608b9d2bed3a7ba8aa7cd94554026693007823ce017",
+      "DistalPhalanxTW": "6e6151017544e175d15a3a32c6bea9cfd90fdc30a1129a14d74971265d5d8052",
+      "ECGFiveDays": "a536fe8c0d3eaac91bf8eca71fcf27aa1b0b308a1ff8989cb965c455de94ecb6",
+      "EOGHorizontalSignal": "229bb00cd82dce95c4eb80b36839077e7ccc8bbbc8550ab1da696e9e33b780e3",
+      "EOGVerticalSignal": "f93e6fed267971bbe067ae7ef90978a5d769f8d359bdfb6f38bdd9841ec2e3bf",
+      "Earthquakes": "b033dd8e8ffc0950d7e5928fdc3ed6c6950f945f51429cbbefd81c5c5eaf8719",
+      "ElectricDevices": "5c9dd426633ebaf0302371be68ce847c938d7a13437e101888e4914c7a4cab62",
+      "EthanolLevel": "9278721d63b53ad5af50bd605d4067ae22d75a9aa20a7e337d345adf9098f1e6",
+      "FiftyWords": "55f5312f5eb93394449296aac96b14f71b68b27074de383d5d6e2f8ccfaea0cc",
+      "FreezerRegularTrain": "1a231869487ef26270ba89a3b24d6cee0d998cedaaed66740c48706ed187e1e7",
+      "FreezerSmallTrain": "254d9ebde3a080de2c04280ac5d1021879bfec8cf66779eb5f83bc26ff91baf1",
+      "GunPoint": "088a9de7418b13e6f1256e91135106965da2a8eee1682fa19f099634d96946b6",
+      "GunPointAgeSpan": "316c7835b41cfa56f5f41cb1b9f1f41508ec1eb90d62a8ebfbdc884dc1537232",
+      "GunPointOldVersusYoung": "7e3ae0e21bbee0caf9ccbbac1702d970cd1f8d66990b0ee14387439c6109f81c",
+      "Herring": "d1e9bba451dc5d32639f0fc00a150bfb470bd0a0a179c64e42e1dffb30bed406",
+      "HouseTwenty": "d5c8f30d39031032baaa06575de8af2b4af697a05b1708b8d4e312023c56d770",
+      "InsectWingbeatSound": "86443ea69924c914df72ce6b0109608e1b670dabc144fd87ab2959b9623b52cf",
+      "ItalyPowerDemand": "f1854554515be552fa596dba93a7cc10aca329fc9d55f0d24baac9a4496a8f4f",
+      "LargeKitchenAppliances": "a6636ca9733c4e3f364e0e31065993c7088dbd27f9161cb617068298e47d21d7",
+      "Mallat": "a4a3b7488c865c35236c14a8998d09ef9b0e6246fd1a7b313c2e6a2ebcfa955f",
+      "Meat": "95970c459c4d07b87d70810d10fe2d875321c6057322f1f366d0cda7fa825ccb",
+      "MiddlePhalanxOutlineCorrect": "f7044c1794c157e23e4c4541c40d26009277802fe86c808da750cc40c34c506e",
+      "MoteStrain": "634aed86c74f214796cb71d3577fd51f38d646d2bab993512e8aae93dcd5052b",
+      "PigAirwayPressure": "d0cf1b4e12d71c3a056d2762c3b5a840ec236277ae799ba743738ef7dd0124a5",
+      "PigArtPressure": "14f943f68c14688e06ae33dccadd4157177b0f00ed7b48efbf5144afcd39b9e4",
+      "PigCVP": "abd881e906aa2eeedd3b974a63c419f43171ab0e6cc252a59d22561c100b7170",
+      "Plane": "48fdc67384d36e5f75e6ebdc0fd1dd213eda863576f8894091b369131cbbc00b",
+      "PowerCons": "55cef22d68c74f924f953577088c8dc31425644008f72ea27d236812119a9ae6",
+      "ProximalPhalanxOutlineAgeGroup": "8e3bdf66c95607becbaed0b6baebb69dea0577a59ac3d30db42d5854d4052cf8",
+      "ProximalPhalanxTW": "c840d1d35ad42442e28a085b17b04e9881262a36300fa72fee0c4dee1c8d1e8a",
+      "ScreenType": "17b9ba8d950224bee1ad94a49b1c99b560f209add8d13236e16bc58adeecfcd1",
+      "SemgHandGenderCh2": "932b8ee3de423ae5095838cb7664f67b7d70b3dfb0edfe4d711ef9bf12d3bd04",
+      "ShapeletSim": "2105ecdc54074a397fb352c170c3294f25581c057e9859886f2569e6fa7098bb",
+      "ShapesAll": "487de273245a28297f6a18dcb48289ec025b95669bf3ba4f71128559a88df530",
+      "SmoothSubspace": "7684754d0f7d30e26b7752726a887cb3e88263c9d34c87cf4c68b305795797bc",
+      "SonyAIBORobotSurface2": "7e2709991335b6896b42c9e4d5f01dfc515d5d06c9ee3b5aaefdd1f33544dc25",
+      "StarLightCurves": "71687d365c07dc38095da593b77ba19aaa50891735f87eeaceba29cd0d8c9da0",
+      "Strawberry": "eaf2b21a717133585f860bac8436388603dc4ac74eeeaee0109c46f5b99ea1f6",
+      "ToeSegmentation2": "79b44c1c181eb781d20cbb28b2a98add7a0002a610a01c425b472fe2bd907e47",
+      "UWaveGestureLibraryAll": "32f00a065dbcbc1653d6d2bb92a0263ac5f3fec47a5aa41eb2693cb9f1ec715f",
+      "UWaveGestureLibraryX": "e7c5f186206be501623d7477d782ae4daf2d0f8e60e4b61fdf6ce7201d48c730",
+      "UWaveGestureLibraryZ": "e6e2c99bfe9ba3e1445b23e23081ff9df48ba9cb05d5a177905f908f184cd952",
+      "Wafer": "1beb7de1fb7a392976cdd8a755556bd61b87017f72c8713d82adb8a40b52f2c6",
+      "WordSynonyms": "831190c90f5eae7b65b688c8889c3d829f2ff87f21617a22d4a3ef248664ebf2",
+      "Worms": "0a5ec0ee3060b4a6ca043f88d00fe9917e8acadaf443ed00d22765273910f4a5",
+      "Yoga": "2f3453e813b57337c821d422abfc28ba9593e70ceb125cb9cf5384dd30155842"
+    }
+  },
+  "expected_heldout_runs": 330,
+  "completed_heldout_runs": 330,
+  "summaries": [
+    {
+      "variant": "baseline",
+      "datasets": 55,
+      "accuracy": 0.8572590645197332,
+      "delta_pp": 0.0,
+      "wins": 0,
+      "ties": 55,
+      "losses": 0,
+      "total_speedup": 1.0,
+      "median_dataset_speedup": 1.0,
+      "classifier_speedup": 1.0,
+      "median_rss_reduction_pct": 0.0,
+      "baseline_total_s": 156.88283262657933,
+      "total_s": 156.88283262657933,
+      "fit_s": 64.73713750229217,
+      "fit_s_speedup": 1.0,
+      "predict_s": 92.14569512428716,
+      "predict_s_speedup": 1.0,
+      "classifier_fit_s": 20.266347254626453,
+      "classifier_fit_s_speedup": 1.0,
+      "classifier_predict_s": 1.367948920931667,
+      "classifier_predict_s_speedup": 1.0,
+      "train_transform_s": 40.13340337667614,
+      "train_transform_s_speedup": 1.0,
+      "test_transform_s": 88.23465087264776,
+      "test_transform_s_speedup": 1.0,
+      "fit_other_s": 4.337386870989576,
+      "fit_other_s_speedup": 1.0,
+      "predict_other_s": 2.543095330707729,
+      "predict_other_s_speedup": 1.0,
+      "median_peak_rss_gib": 1.02996826171875,
+      "features": 49728,
+      "median_train_feature_mib": 34.335205078125,
+      "median_prediction_feature_mib": 58.4267578125,
+      "delta_pp_bootstrap_95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "variant": "pooling_only",
+      "datasets": 55,
+      "accuracy": 0.8545480633247453,
+      "delta_pp": -0.2711001194987856,
+      "wins": 14,
+      "ties": 12,
+      "losses": 29,
+      "total_speedup": 0.9462014383630241,
+      "median_dataset_speedup": 0.9780921705541522,
+      "classifier_speedup": 1.5741698820178829,
+      "median_rss_reduction_pct": 30.99839561959994,
+      "baseline_total_s": 156.88283262657933,
+      "total_s": 165.80278391670436,
+      "fit_s": 62.354254085803404,
+      "fit_s_speedup": 1.0382152501288808,
+      "predict_s": 103.44852983090095,
+      "predict_s_speedup": 0.8907395327406814,
+      "classifier_fit_s": 12.874307586578652,
+      "classifier_fit_s_speedup": 1.5741698820178829,
+      "classifier_predict_s": 0.667089122813195,
+      "classifier_predict_s_speedup": 2.050623933370195,
+      "train_transform_s": 45.83151520462707,
+      "train_transform_s_speedup": 0.8756726282665939,
+      "test_transform_s": 101.44222125224769,
+      "test_transform_s_speedup": 0.8698020388694191,
+      "fit_other_s": 3.6484312945976853,
+      "fit_other_s_speedup": 1.188836110854559,
+      "predict_other_s": 1.339219455840066,
+      "predict_other_s_speedup": 1.8989384597257775,
+      "median_peak_rss_gib": 0.702972412109375,
+      "features": 24864,
+      "median_train_feature_mib": 17.1676025390625,
+      "median_prediction_feature_mib": 29.21337890625,
+      "delta_pp_bootstrap_95": [
+        -0.7676933468343308,
+        0.2748462287106118
+      ]
+    },
+    {
+      "variant": "ridge_only",
+      "datasets": 55,
+      "accuracy": 0.8572590645197332,
+      "delta_pp": 0.0,
+      "wins": 0,
+      "ties": 55,
+      "losses": 0,
+      "total_speedup": 0.9996099310752457,
+      "median_dataset_speedup": 0.9839503298783963,
+      "classifier_speedup": 0.9895531710330728,
+      "median_rss_reduction_pct": -0.001379557713798718,
+      "baseline_total_s": 156.88283262657933,
+      "total_s": 156.9440516240429,
+      "fit_s": 65.03643145947717,
+      "fit_s_speedup": 0.9953980568972103,
+      "predict_s": 91.90762016456574,
+      "predict_s_speedup": 1.0025903723684186,
+      "classifier_fit_s": 20.480301461182535,
+      "classifier_fit_s_speedup": 0.9895531710330728,
+      "classifier_predict_s": 1.2713281637988985,
+      "classifier_predict_s_speedup": 1.0759998558075303,
+      "train_transform_s": 40.22179337940179,
+      "train_transform_s_speedup": 0.9978024350656898,
+      "test_transform_s": 87.99877229495905,
+      "test_transform_s_speedup": 1.002680475778663,
+      "fit_other_s": 4.3343366188928485,
+      "fit_other_s_speedup": 1.0007037413945727,
+      "predict_other_s": 2.63751970580779,
+      "predict_other_s_speedup": 0.9641995565408896,
+      "median_peak_rss_gib": 0.8638458251953125,
+      "features": 49728,
+      "median_train_feature_mib": 34.335205078125,
+      "median_prediction_feature_mib": 58.4267578125,
+      "delta_pp_bootstrap_95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "variant": "memory_only",
+      "datasets": 55,
+      "accuracy": 0.8572590645197332,
+      "delta_pp": 0.0,
+      "wins": 0,
+      "ties": 55,
+      "losses": 0,
+      "total_speedup": 1.015736518166987,
+      "median_dataset_speedup": 1.014099407726033,
+      "classifier_speedup": 1.0405640575503219,
+      "median_rss_reduction_pct": 2.3762790819397583,
+      "baseline_total_s": 156.88283262657933,
+      "total_s": 154.45229133800603,
+      "fit_s": 63.99077274976298,
+      "fit_s_speedup": 1.0116636308714049,
+      "predict_s": 90.46151858824305,
+      "predict_s_speedup": 1.0186176018524522,
+      "classifier_fit_s": 19.476309130201116,
+      "classifier_fit_s_speedup": 1.0405640575503219,
+      "classifier_predict_s": 1.2864650026895106,
+      "classifier_predict_s_speedup": 1.063339397552055,
+      "train_transform_s": 40.4766779539641,
+      "train_transform_s_speedup": 0.9915192008178542,
+      "test_transform_s": 87.27156346244738,
+      "test_transform_s_speedup": 1.0110355237375208,
+      "fit_other_s": 4.037785665597767,
+      "fit_other_s_speedup": 1.0741993830788081,
+      "predict_other_s": 1.9034901231061667,
+      "predict_other_s_speedup": 1.3360170876840889,
+      "median_peak_rss_gib": 0.726409912109375,
+      "features": 49728,
+      "median_train_feature_mib": 34.335205078125,
+      "median_prediction_feature_mib": 48.5625,
+      "delta_pp_bootstrap_95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "variant": "pooling_ridge",
+      "datasets": 55,
+      "accuracy": 0.8545480633247453,
+      "delta_pp": -0.2711001194987856,
+      "wins": 14,
+      "ties": 12,
+      "losses": 29,
+      "total_speedup": 0.9381459808532095,
+      "median_dataset_speedup": 0.9550664647775727,
+      "classifier_speedup": 1.4207228870850157,
+      "median_rss_reduction_pct": 31.85541412181061,
+      "baseline_total_s": 156.88283262657933,
+      "total_s": 167.22646137000993,
+      "fit_s": 63.832918625790626,
+      "fit_s_speedup": 1.0141654007989571,
+      "predict_s": 103.3935427442193,
+      "predict_s_speedup": 0.8912132487058917,
+      "classifier_fit_s": 14.264813665533438,
+      "classifier_fit_s_speedup": 1.4207228870850157,
+      "classifier_predict_s": 0.6620957066770643,
+      "classifier_predict_s_speedup": 2.0660893993666707,
+      "train_transform_s": 45.88528600009158,
+      "train_transform_s_speedup": 0.8746464689485871,
+      "test_transform_s": 101.39209379116073,
+      "test_transform_s_speedup": 0.8702320622196281,
+      "fit_other_s": 3.682818960165605,
+      "fit_other_s_speedup": 1.1777355655827668,
+      "predict_other_s": 1.3393532463815063,
+      "predict_other_s_speedup": 1.8987487711537934,
+      "median_peak_rss_gib": 0.623870849609375,
+      "features": 24864,
+      "median_train_feature_mib": 17.1676025390625,
+      "median_prediction_feature_mib": 29.21337890625,
+      "delta_pp_bootstrap_95": [
+        -0.7676933468343308,
+        0.2748462287106118
+      ]
+    },
+    {
+      "variant": "combined",
+      "datasets": 55,
+      "accuracy": 0.8545480633247453,
+      "delta_pp": -0.2711001194987856,
+      "wins": 14,
+      "ties": 12,
+      "losses": 29,
+      "total_speedup": 0.9481904548649288,
+      "median_dataset_speedup": 0.9710911395393793,
+      "classifier_speedup": 1.4150378374965982,
+      "median_rss_reduction_pct": 31.95831070637871,
+      "baseline_total_s": 156.88283262657933,
+      "total_s": 165.45497987419367,
+      "fit_s": 63.42637470900081,
+      "fit_s_speedup": 1.0206658948947518,
+      "predict_s": 102.02860516519286,
+      "predict_s_speedup": 0.9031358899310205,
+      "classifier_fit_s": 14.3221239161212,
+      "classifier_fit_s_speedup": 1.4150378374965982,
+      "classifier_predict_s": 0.6670511227566749,
+      "classifier_predict_s_speedup": 2.0507407517409484,
+      "train_transform_s": 45.57752612349577,
+      "train_transform_s_speedup": 0.8805524737769144,
+      "test_transform_s": 100.31397275999188,
+      "test_transform_s_speedup": 0.8795848518905264,
+      "fit_other_s": 3.5267246693838388,
+      "fit_other_s_speedup": 1.2298626282463296,
+      "predict_other_s": 1.0475812824442983,
+      "predict_other_s_speedup": 2.4275875994786587,
+      "median_peak_rss_gib": 0.5344696044921875,
+      "features": 24864,
+      "median_train_feature_mib": 17.1676025390625,
+      "median_prediction_feature_mib": 24.28125,
+      "delta_pp_bootstrap_95": [
+        -0.7676933468343308,
+        0.2748462287106118
+      ]
+    }
+  ],
+  "parity": [
+    {
+      "dataset": "BME",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "BirdChicken",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Car",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Chinatown",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CinCECGTorso",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Coffee",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Computers",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketX",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketY",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketZ",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineAgeGroup",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineCorrect",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG200",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG5000",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceAll",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceFour",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FacesUCR",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Fish",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordA",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordB",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "GunPointMaleVersusFemale",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Ham",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Haptics",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InlineSkate",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGRegularTrain",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGSmallTrain",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning2",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning7",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MedicalImages",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxOutlineAgeGroup",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxTW",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesRegularTrain",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesSmallTrain",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OSULeaf",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OliveOil",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "PhalangesOutlinesCorrect",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Phoneme",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ProximalPhalanxOutlineCorrect",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "RefrigerationDevices",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Rock",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandMovementCh2",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandSubjectCh2",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SmallKitchenAppliances",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SonyAIBORobotSurface1",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SwedishLeaf",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Symbols",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SyntheticControl",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ToeSegmentation1",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Trace",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoLeadECG",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoPatterns",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UMD",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UWaveGestureLibraryY",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Wine",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "WormsTwoClass",
+      "variant": "ridge_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "BME",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "BirdChicken",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Car",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Chinatown",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CinCECGTorso",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Coffee",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Computers",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketX",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketY",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketZ",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineAgeGroup",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineCorrect",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG200",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG5000",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceAll",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceFour",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FacesUCR",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Fish",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordA",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordB",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "GunPointMaleVersusFemale",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Ham",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Haptics",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InlineSkate",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGRegularTrain",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGSmallTrain",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning2",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning7",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MedicalImages",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxOutlineAgeGroup",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxTW",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesRegularTrain",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesSmallTrain",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OSULeaf",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OliveOil",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "PhalangesOutlinesCorrect",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Phoneme",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ProximalPhalanxOutlineCorrect",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "RefrigerationDevices",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Rock",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandMovementCh2",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandSubjectCh2",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SmallKitchenAppliances",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SonyAIBORobotSurface1",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SwedishLeaf",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Symbols",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SyntheticControl",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ToeSegmentation1",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Trace",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoLeadECG",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoPatterns",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UMD",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UWaveGestureLibraryY",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Wine",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "WormsTwoClass",
+      "variant": "memory_only",
+      "reference": "baseline",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "BME",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "BirdChicken",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Car",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Chinatown",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CinCECGTorso",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Coffee",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Computers",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketX",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketY",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketZ",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineAgeGroup",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineCorrect",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG200",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG5000",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceAll",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceFour",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FacesUCR",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Fish",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordA",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordB",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "GunPointMaleVersusFemale",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Ham",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Haptics",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InlineSkate",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGRegularTrain",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGSmallTrain",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning2",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning7",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MedicalImages",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxOutlineAgeGroup",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxTW",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesRegularTrain",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesSmallTrain",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OSULeaf",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OliveOil",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "PhalangesOutlinesCorrect",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Phoneme",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ProximalPhalanxOutlineCorrect",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "RefrigerationDevices",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Rock",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandMovementCh2",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandSubjectCh2",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SmallKitchenAppliances",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SonyAIBORobotSurface1",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SwedishLeaf",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Symbols",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SyntheticControl",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ToeSegmentation1",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Trace",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoLeadECG",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoPatterns",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UMD",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UWaveGestureLibraryY",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Wine",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "WormsTwoClass",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ElectricDevices",
+      "variant": "pooling_ridge",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "BME",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "BirdChicken",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Car",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Chinatown",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CinCECGTorso",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Coffee",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Computers",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketX",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketY",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "CricketZ",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineAgeGroup",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "DistalPhalanxOutlineCorrect",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG200",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ECG5000",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceAll",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FaceFour",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FacesUCR",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Fish",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordA",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "FordB",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "GunPointMaleVersusFemale",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Ham",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Haptics",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InlineSkate",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGRegularTrain",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "InsectEPGSmallTrain",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning2",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Lightning7",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MedicalImages",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxOutlineAgeGroup",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MiddlePhalanxTW",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesRegularTrain",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "MixedShapesSmallTrain",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OSULeaf",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "OliveOil",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "PhalangesOutlinesCorrect",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Phoneme",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ProximalPhalanxOutlineCorrect",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "RefrigerationDevices",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Rock",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandMovementCh2",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SemgHandSubjectCh2",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SmallKitchenAppliances",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SonyAIBORobotSurface1",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SwedishLeaf",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Symbols",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "SyntheticControl",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ToeSegmentation1",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Trace",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoLeadECG",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "TwoPatterns",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UMD",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "UWaveGestureLibraryY",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "Wine",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "WormsTwoClass",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    },
+    {
+      "dataset": "ElectricDevices",
+      "variant": "combined",
+      "reference": "pooling_only",
+      "alpha_equal": true,
+      "prediction_agreement": 1.0
+    }
+  ],
+  "failures": [
+    {
+      "dataset": "ElectricDevices",
+      "variant": "baseline",
+      "repeat": 0,
+      "status": "rss_limit",
+      "seed": NaN,
+      "accuracy": NaN,
+      "alpha": NaN,
+      "features": NaN,
+      "train_feature_bytes": NaN,
+      "max_prediction_feature_bytes": NaN,
+      "fit_s": NaN,
+      "predict_s": NaN,
+      "total_s": NaN,
+      "classifier_fit_s": NaN,
+      "classifier_predict_s": NaN,
+      "train_transform_s": NaN,
+      "test_transform_s": NaN,
+      "peak_rss_bytes": 9957277696,
+      "prediction_hash": NaN,
+      "exitcode": -9.0
+    }
+  ]
+}

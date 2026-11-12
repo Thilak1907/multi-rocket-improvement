@@ -1,0 +1,5 @@
+reference,datasets,accuracy
+"Published MultiRocket, resample 0",55,0.8607680068905345
+"Published MultiRocket, 30-resample mean",55,0.8765439515063067
+"Existing local 50k results, resample 0",55,0.8565934653286561
+"Fresh seeded baseline, resample 0",55,0.8572590645197332

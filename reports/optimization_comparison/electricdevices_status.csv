@@ -1,0 +1,7 @@
+variant,attempts,successful,rss_limit,other_failures,largest_observed_rss_gib
+baseline,1,0,1,0,9.2734375
+combined,1,1,0,0,5.5026397705078125
+memory_only,1,1,0,0,6.7016448974609375
+pooling_only,1,1,0,0,6.3767242431640625
+pooling_ridge,1,1,0,0,5.919921875
+ridge_only,1,1,0,0,7.4966888427734375

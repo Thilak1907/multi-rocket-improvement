@@ -1,0 +1,10 @@
+{
+  "primary_margin_pp": -0.3,
+  "alpha": 0.05,
+  "unit": "dataset; paired accuracy differences averaged across resamples 1,2,3",
+  "primary_gate": "one-sided paired-difference t test against -0.3 pp plus two-sided dataset-bootstrap 95% lower bound above -0.3 pp",
+  "bootstrap_draws": 20000,
+  "hierarchical_sensitivity": "resample datasets, then resample three accuracy splits independently within each sampled dataset; report separately, do not use to tune configuration",
+  "timing_repetitions": "not independent accuracy observations",
+  "claim": "no loss within the prespecified margin if gate passes; no claim of a gain"
+}

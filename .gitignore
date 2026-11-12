@@ -3,6 +3,9 @@
 
 # Virtual environment
 /.venv/
+/venv/
+/env/
+/ENV/
 
 # Dataset
 /data/
@@ -16,3 +19,51 @@
 # Python cache
 __pycache__/
 *.py[cod]
+*.nbc
+*.nbi
+
+# Python packaging and build output
+/build/
+/dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# Local editor and OS files
+/.vscode/
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# Test/tool caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.mypy_cache/
+.hypothesis/
+.tox/
+.nox/
+.ipynb_checkpoints/
+
+# Local environment settings (keep shareable examples)
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+
+# Transient benchmark progress (final reports stay versioned)
+/reports/review_revision/progress.json
+/reports/review_revision/progress.md

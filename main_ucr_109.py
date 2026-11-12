@@ -34,6 +34,15 @@ parser.add_argument("-n", "--num_features", type=int, required=False, default=50
 parser.add_argument("-t", "--num_threads", type=int, required=False, default=-1)
 parser.add_argument("-s", "--save", type=bool, required=False, default=True)
 parser.add_argument("-v", "--verbose", type=int, required=False, default=2)
+parser.add_argument("--pooling", default="PPV+LSPV+MPV+MIPV")
+parser.add_argument("--classifier", choices=("ridge", "fast_ridge", "auto_ridge", "logistic"), default="ridge")
+parser.add_argument("--seed", type=int, default=None)
+parser.add_argument("--memory-efficient", action="store_true")
+parser.add_argument("--prediction-batch-size", type=int, default=256)
+parser.add_argument("--optimized-transform", action="store_true")
+parser.add_argument("--fused-prediction", action="store_true")
+parser.add_argument("--legacy-first-difference", action="store_true")
+parser.add_argument("--ridge-feature-limit-mib", type=float, default=693)
 
 arguments = parser.parse_args()
 
@@ -48,6 +57,20 @@ if __name__ == '__main__':
 
     output_path = os.getcwd() + "/output/"
     classifier_name = "MultiRocket_{}".format(num_features)
+    if (arguments.pooling != "PPV+LSPV+MPV+MIPV" or arguments.classifier != "ridge"
+            or arguments.memory_efficient or arguments.seed is not None
+            or arguments.optimized_transform or arguments.fused_prediction):
+        classifier_name += "_{}_{}_mem{}_seed{}".format(
+            arguments.pooling.replace(",", "+"), arguments.classifier,
+            int(arguments.memory_efficient), arguments.seed)
+        if arguments.optimized_transform or arguments.fused_prediction:
+            classifier_name += "_buf{}_fused{}".format(
+                int(arguments.optimized_transform), int(arguments.fused_prediction))
+
+    if not arguments.legacy_first_difference:
+        classifier_name += "_diff1fixed"
+    if arguments.classifier == "auto_ridge":
+        classifier_name += "_limit{}MiB".format(arguments.ridge_feature_limit_mib)
 
     datasets = get_classification_datasets_summary(subset="109")
     if problem == "":
@@ -63,7 +86,7 @@ if __name__ == '__main__':
 
     for i in range(len(datasets)):
         problem = datasets.Name[i].strip()
-        data_folder = data_path + problem + "/"
+        data_folder = os.path.join(data_path, problem, "")
         if not os.path.exists(data_folder):
             continue
 
@@ -115,7 +138,16 @@ if __name__ == '__main__':
 
         classifier = MultiRocket(
             num_features=num_features,
-            verbose=verbose
+            verbose=verbose,
+            pooling=arguments.pooling,
+            classifier=arguments.classifier,
+            random_state=arguments.seed,
+            memory_efficient=arguments.memory_efficient,
+            prediction_batch_size=arguments.prediction_batch_size,
+            optimized_transform=arguments.optimized_transform,
+            fused_prediction=arguments.fused_prediction,
+            first_difference_fix=not arguments.legacy_first_difference,
+            ridge_feature_limit_bytes=int(arguments.ridge_feature_limit_mib * 1024**2),
         )
         yhat_train = classifier.fit(
             X_train, y_train,
@@ -174,6 +206,23 @@ if __name__ == '__main__':
         df_metrics["max_freq"] = max_freq
         df_metrics["min_freq"] = min_freq
         df_metrics["memory"] = memory
+        df_metrics["actual_num_features"] = classifier.n_features_out_
+        df_metrics["pooling"] = "+".join(classifier.pooling)
+        df_metrics["ridge_backend"] = arguments.classifier
+        df_metrics["seed"] = arguments.seed
+        df_metrics["memory_efficient"] = arguments.memory_efficient
+        df_metrics["prediction_batch_size"] = arguments.prediction_batch_size
+        df_metrics["optimized_transform"] = arguments.optimized_transform
+        df_metrics["fused_prediction"] = arguments.fused_prediction
+        df_metrics["first_difference_fix"] = not arguments.legacy_first_difference
+        df_metrics["selected_ridge_backend"] = classifier.selected_ridge_backend_
+        df_metrics["ridge_feature_limit_bytes"] = classifier.ridge_feature_limit_bytes
+        df_metrics["fit_total_time"] = classifier.fit_total_duration
+        df_metrics["predict_total_time"] = classifier.predict_total_duration
+        df_metrics["train_feature_bytes"] = classifier.train_feature_bytes_
+        df_metrics["max_prediction_feature_bytes"] = classifier.max_prediction_feature_bytes_
+        if arguments.classifier in ("ridge", "fast_ridge", "auto_ridge"):
+            df_metrics["alpha"] = classifier.classifier[-1].alpha_
 
         print(df_metrics)
         if save:

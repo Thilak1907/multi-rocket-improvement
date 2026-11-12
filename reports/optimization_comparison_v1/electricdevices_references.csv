@@ -1,0 +1,4 @@
+reference,accuracy,classifier_fit_s
+Paper/repo published resample 0,0.7402412138503437,
+Paper/repo published 30-resample mean,0.9003458263087364,
+Existing local 50k run,0.7375178316690443,64.43242383294273

@@ -1,0 +1,4 @@
+dataset,variant,resample,repeat,status,seed,first_difference_fix,train_indices_sha256,test_indices_sha256,n_train,n_test,length,accuracy,balanced_accuracy,macro_f1,fit_s,predict_s,total_s,classifier_fit_s,classifier_predict_s,train_transform_s,test_transform_s,peak_rss_bytes,features,alpha,selected_backend,train_feature_bytes,max_prediction_feature_bytes,model_bytes,prediction_hash,exitcode,phase
+ElectricDevices,baseline50,1,0,rss_limit,,,,,,,,,,,,,,,,,,9666592768,,,,,,,,-9.0,stress
+ElectricDevices,fused30,1,0,rss_limit,,,,,,,,,,,,,,,,,,9777217536,,,,,,,,-9.0,stress
+ElectricDevices,hybrid20h32,1,0,rss_limit,,,,,,,,,,,,,,,,,,9694887936,,,,,,,,-9.0,stress
