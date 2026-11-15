@@ -25,7 +25,10 @@ def table(df, floatfmt=4):
     df = df.copy()
     for c in df.columns:
         if df[c].dtype.kind == "f":
-            df[c] = df[c].map(lambda v: "" if pd.isna(v) else f"{v:.{floatfmt}f}")
+            if c.endswith("_p"):
+                df[c] = df[c].map(lambda v: "" if pd.isna(v) else f"{v:.3g}")
+            else:
+                df[c] = df[c].map(lambda v: "" if pd.isna(v) else f"{v:.{floatfmt}f}")
     cols = [str(c) for c in df.columns]
     out = ["| " + " | ".join(cols) + " |", "|" + "---|" * len(cols)]
     out += ["| " + " | ".join(str(v) for v in row) + " |" for row in df.itertuples(index=False)]
@@ -38,6 +41,43 @@ def folds(path):
     return f
 
 
+def validate_runs(runs):
+    """Reject repeated or unpaired observations rather than averaging them."""
+    keys = ["stage", "config", "dataset", "resample", "seed"]
+    missing = set(keys + ["acc", "fit_s", "predict_s"]) - set(runs.columns)
+    if missing:
+        raise ValueError("Successful records are missing fields: " + ", ".join(sorted(missing)))
+    if runs.duplicated(keys).any():
+        raise ValueError("Duplicate successful runs. Use a new --out file for a rerun; do not append the same jobs twice.")
+    b = runs[runs.stage == "B"]
+    if not b.empty:
+        if "paper50" not in set(b.config):
+            raise ValueError("Stage B comparisons require paper50 as the paired reference.")
+        if not (b.seed == 0).all():
+            raise ValueError("Stage B expects kernel seed 0 on every resample.")
+        reference = set(b[b.config == "paper50"][["dataset", "resample"]].itertuples(index=False, name=None))
+        for dataset, group in b[b.config == "paper50"].groupby("dataset"):
+            if set(group["resample"]) != set(range(30)):
+                raise ValueError(f"Incomplete Stage B reference for {dataset}: expected resamples 0–29.")
+        for config, group in b.groupby("config"):
+            if set(group[["dataset", "resample"]].itertuples(index=False, name=None)) != reference:
+                raise ValueError(f"Incomplete Stage B comparison for {config}: dataset/resample pairs differ from paper50.")
+    c = runs[runs.stage == "C"]
+    if not c.empty and (c.duplicated(["dataset", "config"]).any()
+                        or not ((c["resample"] == 0) & (c.seed == 0)).all()):
+        raise ValueError("Stage C expects one original-split, seed-0 run per dataset/configuration.")
+
+
+def peak_memory(rss, dataset, config):
+    if rss.empty:
+        return np.nan, np.nan
+    peaks = rss[(rss.stage == "C") & (rss.dataset == dataset) & (rss.config == config)].peak_rss_mib
+    if len(peaks) > 1:
+        raise ValueError(f"Multiple Stage C peak-RSS records for {dataset}/{config}.")
+    mib = float(peaks.iloc[0]) if len(peaks) else np.nan
+    return mib * 2**20 / 1e9, mib / 1024
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--results", type=Path, default=HERE / "recorded/results.jsonl")
@@ -45,15 +85,32 @@ def main():
     parser.add_argument("--out", type=Path, default=HERE / "output/report.md")
     args = parser.parse_args()
 
-    recs = [json.loads(line) for line in args.results.open()]
+    recs = [json.loads(line) for line in args.results.read_text().splitlines() if line.strip()]
     runs = pd.DataFrame([r for r in recs if "acc" in r])
     rss = pd.DataFrame([r for r in recs if "peak_rss_mib" in r])
     failed = pd.DataFrame([r for r in recs if r.get("status") in ("killed", "error")])
+    if runs.empty:
+        print(f"No successful runs in {args.results}.")
+        for r in failed.itertuples():
+            print(f"  {r.stage} {r.config} {r.dataset}: {r.status} (exit {r.exit_code})")
+        print("Check that data/UCRArchive_2018 and data/indices109 exist "
+              "(python scripts/download_data.py --upstream --ucr).")
+        raise SystemExit(1)
+    try:
+        validate_runs(runs)
+    except ValueError as error:
+        parser.error(str(error))
 
     pub_r0 = pd.read_csv(HERE / "recorded/published_resample0.csv").set_index("dataset")["accuracy"]
     f50 = folds(args.upstream_results / "resamples/MULTIROCKET_50K_TESTFOLDS.csv")
     f10 = folds(args.upstream_results / "resamples/MULTIROCKET_10K_TESTFOLDS.csv")
-    md = ["# Section IV reproduction checks", "", f"Source: `{args.results}`", ""]
+    try:
+        source = args.results.resolve().relative_to(ROOT)
+    except ValueError:
+        source = args.results
+    md = ["# Section IV reproduction checks", "", f"Source: `{source}`", "",
+          "The fold-by-fold study below covers the recorded dataset subset, not the full archive. "
+          "Per-dataset Wilcoxon p-values are exploratory and are not adjusted for multiple comparisons.", ""]
 
     # Stage A: seed variance on the original split
     a = runs[(runs.stage == "A") & (runs.config == "paper50")]
@@ -61,10 +118,10 @@ def main():
         rows = []
         for d, g in a.groupby("dataset"):
             acc = g.acc.to_numpy()
-            rows.append(dict(dataset=d, paper=100 * pub_r0[d], ours_mean=100 * acc.mean(),
+            rows.append(dict(dataset=d, seeds=len(g), paper=100 * pub_r0[d], ours_mean=100 * acc.mean(),
                              ours_sd=100 * acc.std(ddof=1), seed_min=100 * acc.min(), seed_max=100 * acc.max(),
                              in_range="yes" if acc.min() - 1e-9 <= pub_r0[d] <= acc.max() + 1e-9 else "NO"))
-        md += ["## A. Original split, paper configuration, 10 kernel seeds (accuracy %)", "",
+        md += ["## A. Original split, paper configuration, kernel-seed check (accuracy %)", "",
                table(pd.DataFrame(rows), 2), ""]
 
     # Stage B: paired folds against the published 50k folds
@@ -93,7 +150,7 @@ def main():
             md += ["## B2. 10k configuration against the published 10k folds (accuracy %)", "",
                    table(pd.DataFrame(rows), 2), ""]
 
-        piv = b.pivot_table(index=["dataset", "resample"], columns="config", values="acc")
+        piv = b.pivot(index=["dataset", "resample"], columns="config", values="acc")
         means = piv.groupby("dataset").mean()
         rng = np.random.default_rng(0)
         tot = b.assign(t=b.fit_s + b.predict_s).pivot_table(index="dataset", columns="config", values="t", aggfunc="sum")
@@ -104,7 +161,7 @@ def main():
             rows.append(dict(config=c, accuracy=100 * means[c].mean(), delta_pp=dd.mean(),
                              ci_low=np.percentile(boots, 2.5), ci_high=np.percentile(boots, 97.5),
                              time_s=tot[c].sum(), speedup=tot["paper50"].sum() / tot[c].sum()))
-        md += ["## B3. Configurations paired with the paper configuration (8 datasets x 30 resamples)", "",
+        md += [f"## B3. Configurations paired with the paper configuration ({len(means)} datasets x 30 resamples)", "",
                "Delta is the mean of per-dataset differences; the CI is a dataset bootstrap (10,000 draws, seed 0).", "",
                table(pd.DataFrame(rows), 2), ""]
 
@@ -128,18 +185,28 @@ def main():
     if len(c) or len(failed):
         rows = []
         for (d, cfg), g in c.groupby(["dataset", "config"]):
-            peak = rss[(rss.dataset == d) & (rss.config == cfg)].peak_rss_mib
+            peak_gb, peak_gib = peak_memory(rss, d, cfg)
             rows.append(dict(dataset=d, config=cfg, accuracy=100 * g.acc.iloc[0], paper_r0=100 * pub_r0.get(d, np.nan),
                              time_s=(g.fit_s + g.predict_s).iloc[0],
-                             peak_rss_gib=peak.iloc[0] / 1024 if len(peak) else np.nan, status="ok"))
+                             peak_rss_gb=peak_gb, peak_rss_gib=peak_gib, status="ok"))
         for r in failed.itertuples():
             if r.stage == "C":
                 rows.append(dict(dataset=r.dataset, config=r.config, accuracy=np.nan,
-                                 paper_r0=100 * pub_r0.get(r.dataset, np.nan), time_s=np.nan, peak_rss_gib=np.nan,
+                                 paper_r0=100 * pub_r0.get(r.dataset, np.nan), time_s=np.nan,
+                                 peak_rss_gb=np.nan, peak_rss_gib=np.nan,
                                  status=f"{r.status} (exit {r.exit_code})"))
+        recorded = args.results.resolve() == (HERE / "recorded/results.jsonl").resolve()
+        kill_note = ("For the recorded Crop paper50/fixed50 attempts, the supplied kernel log "
+                     "corroborates out-of-memory kills on the 8 GB machine." if recorded else
+                     "For new runs, consult their kernel logs before attributing SIGKILL to out-of-memory.")
         md += ["## C. Large datasets, original split, seed 0", "",
-               "Exit -9 is SIGKILL; on the recorded 8 GB machine the kernel log showed out-of-memory kills.", "",
+               "GB = 10^9 bytes; GiB = 2^30 bytes. Raw peak-RSS records are in MiB (2^20 bytes).", "",
+               "Exit -9 is SIGKILL, which alone does not establish out-of-memory. " + kill_note, "",
                table(pd.DataFrame(rows).sort_values(["dataset", "config"]), 2), ""]
+        if not c[(c.dataset == "StarLightCurves") & (c.config == "paper50")].empty:
+            gb, gib = peak_memory(rss, "StarLightCurves", "paper50")
+            if np.isfinite(gb):
+                md += [f"StarLightCurves paper50 peak RSS: **{gb:.1f} GB ({gib:.2f} GiB)**.", ""]
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text("\n".join(md))

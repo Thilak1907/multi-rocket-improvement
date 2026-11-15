@@ -6,8 +6,8 @@ published 50k results over 30 resamples, the effect of the first-difference fix,
 the runtime breakdown and the memory runs on StarLightCurves and Crop. It also
 reruns the four configurations side by side on a second machine.
 
-The 104-dataset comparison in Section IV (86.43% against 86.68% published) is not
-part of this folder.
+The fold-by-fold comparison here covers eight datasets. It does not support a
+full-archive accuracy claim.
 
 ## What is here
 
@@ -66,7 +66,8 @@ On Windows PowerShell, use the same commands with `python` and backslashes in pa
 ## Expected results (recorded runs)
 
 **Original split, 10 seeds:** every published resample-0 accuracy lies inside the
-range of our 10 seeds. The spread reaches 0.65 points (ArrowHead).
+range of our 10 seeds. The sample standard deviation reaches 0.65 points
+(ArrowHead, whose seed range is 85.71%–88.00%).
 
 **30 resamples, paired fold by fold with the published 50k folds:**
 
@@ -102,6 +103,10 @@ the 55-dataset benchmark, so it is not claimed as a gain.
 
 **Large datasets, original split (8 GB memory limit):**
 
+The StarLightCurves `paper50` peak is **6.4 GB (5.95 GiB)**. GB uses decimal
+bytes (10^9); GiB uses binary bytes (2^30). The generated report includes both
+units. The recorded 6,088.72 MiB converts to 6.4 GB when rounded to one decimal.
+
 | Dataset | Configuration | Accuracy (%) | Published (%) | Time (s) | Peak RSS (GiB) |
 |---|---|---|---|---|---|
 | StarLightCurves | paper50 | 98.14 | 98.17 | 76.1 | 5.95 |
@@ -123,3 +128,8 @@ the 55-dataset benchmark, so it is not claimed as a gain.
 - Peak RSS includes imported libraries (about 0.8 GiB with PyTorch).
 - Whether the 50k configuration is killed on Crop depends on available memory; on
   machines with more than about 8 GB it should finish.
+- Analysis rejects duplicate successful runs and incomplete Stage B comparisons.
+  `run_all.py` appends to its output file; use a new `--out` path for an independent
+  rerun instead of appending the same jobs twice. A full Stage B comparison needs
+  the same 30 resamples for every selected configuration. Single-configuration
+  memory-only Stage C files can be analysed without Stage B.

@@ -1,19 +1,21 @@
 # Section IV reproduction checks
 
-Source: `/home/claude/repo2/reproduction/recorded/results.jsonl`
+Source: `reproduction/recorded/results.jsonl`
 
-## A. Original split, paper configuration, 10 kernel seeds (accuracy %)
+The fold-by-fold study below covers the recorded dataset subset, not the full archive. Per-dataset Wilcoxon p-values are exploratory and are not adjusted for multiple comparisons.
 
-| dataset | paper | ours_mean | ours_sd | seed_min | seed_max | in_range |
-|---|---|---|---|---|---|---|
-| ArrowHead | 86.86 | 86.74 | 0.65 | 85.71 | 88.00 | yes |
-| Beef | 76.67 | 76.67 | 0.00 | 76.67 | 76.67 | yes |
-| Coffee | 100.00 | 100.00 | 0.00 | 100.00 | 100.00 | yes |
-| ECG200 | 92.00 | 91.60 | 0.52 | 91.00 | 92.00 | yes |
-| GunPoint | 100.00 | 100.00 | 0.00 | 100.00 | 100.00 | yes |
-| InsectWingbeatSound | 67.27 | 67.23 | 0.24 | 66.82 | 67.58 | yes |
-| ItalyPowerDemand | 96.79 | 96.93 | 0.15 | 96.70 | 97.08 | yes |
-| OSULeaf | 95.45 | 96.32 | 0.41 | 95.45 | 96.69 | yes |
+## A. Original split, paper configuration, kernel-seed check (accuracy %)
+
+| dataset | seeds | paper | ours_mean | ours_sd | seed_min | seed_max | in_range |
+|---|---|---|---|---|---|---|---|
+| ArrowHead | 10 | 86.86 | 86.74 | 0.65 | 85.71 | 88.00 | yes |
+| Beef | 10 | 76.67 | 76.67 | 0.00 | 76.67 | 76.67 | yes |
+| Coffee | 10 | 100.00 | 100.00 | 0.00 | 100.00 | 100.00 | yes |
+| ECG200 | 10 | 92.00 | 91.60 | 0.52 | 91.00 | 92.00 | yes |
+| GunPoint | 10 | 100.00 | 100.00 | 0.00 | 100.00 | 100.00 | yes |
+| InsectWingbeatSound | 10 | 67.27 | 67.23 | 0.24 | 66.82 | 67.58 | yes |
+| ItalyPowerDemand | 10 | 96.79 | 96.93 | 0.15 | 96.70 | 97.08 | yes |
+| OSULeaf | 10 | 95.45 | 96.32 | 0.41 | 95.45 | 96.69 | yes |
 
 ## B1. Thirty resamples, seed 0, paired with the published 50k folds (accuracy %)
 
@@ -24,9 +26,9 @@ Source: `/home/claude/repo2/reproduction/recorded/results.jsonl`
 | Coffee | 30 | 100.000 | 100.000 | 0.000 | 0 | 30 | 0 |  |
 | ECG200 | 30 | 89.000 | 89.067 | -0.067 | 11 | 13 | 6 | 0.315 |
 | GunPoint | 30 | 99.756 | 99.778 | -0.022 | 1 | 23 | 6 | 0.206 |
-| InsectWingbeatSound | 30 | 66.340 | 67.170 | -0.830 | 27 | 0 | 3 | 0.000 |
+| InsectWingbeatSound | 30 | 66.340 | 67.170 | -0.830 | 27 | 0 | 3 | 2.15e-05 |
 | ItalyPowerDemand | 30 | 96.388 | 96.450 | -0.062 | 16 | 1 | 13 | 0.246 |
-| OSULeaf | 30 | 96.006 | 96.171 | -0.165 | 17 | 8 | 5 | 0.006 |
+| OSULeaf | 30 | 96.006 | 96.171 | -0.165 | 17 | 8 | 5 | 0.00607 |
 
 Mean over datasets: ours 89.25, paper 89.39.
 
@@ -62,7 +64,7 @@ Delta is the mean of per-dataset differences; the CI is a dataset bootstrap (10,
 | Beef | -0.111 | 0.763 |
 | Coffee | 0.000 |  |
 | ECG200 | 0.000 | 0.976 |
-| GunPoint | -0.044 | 0.180 |
+| GunPoint | -0.044 | 0.18 |
 | InsectWingbeatSound | -0.044 | 0.356 |
 | ItalyPowerDemand | 0.029 | 0.672 |
 | OSULeaf | 0.014 | 0.879 |
@@ -76,15 +78,19 @@ Empty p-value: identical accuracy on every fold.
 
 ## C. Large datasets, original split, seed 0
 
-Exit -9 is SIGKILL; on the recorded 8 GB machine the kernel log showed out-of-memory kills.
+GB = 10^9 bytes; GiB = 2^30 bytes. Raw peak-RSS records are in MiB (2^20 bytes).
 
-| dataset | config | accuracy | paper_r0 | time_s | peak_rss_gib | status |
-|---|---|---|---|---|---|---|
-| Crop | fast10 | 76.86 | 77.48 | 70.64 | 1.88 | ok |
-| Crop | fixed50 |  | 77.48 |  |  | killed (exit -9) |
-| Crop | paper50 |  | 77.48 |  |  | killed (exit -9) |
-| Crop | rec30 | 77.20 | 77.48 | 100.59 | 3.29 | ok |
-| StarLightCurves | fast10 | 98.17 | 98.17 | 14.66 | 1.01 | ok |
-| StarLightCurves | fixed50 | 98.13 | 98.17 | 75.79 | 5.94 | ok |
-| StarLightCurves | paper50 | 98.14 | 98.17 | 76.06 | 5.95 | ok |
-| StarLightCurves | rec30 | 98.14 | 98.17 | 44.22 | 1.33 | ok |
+Exit -9 is SIGKILL, which alone does not establish out-of-memory. For the recorded Crop paper50/fixed50 attempts, the supplied kernel log corroborates out-of-memory kills on the 8 GB machine.
+
+| dataset | config | accuracy | paper_r0 | time_s | peak_rss_gb | peak_rss_gib | status |
+|---|---|---|---|---|---|---|---|
+| Crop | fast10 | 76.86 | 77.48 | 70.64 | 2.02 | 1.88 | ok |
+| Crop | fixed50 |  | 77.48 |  |  |  | killed (exit -9) |
+| Crop | paper50 |  | 77.48 |  |  |  | killed (exit -9) |
+| Crop | rec30 | 77.20 | 77.48 | 100.59 | 3.53 | 3.29 | ok |
+| StarLightCurves | fast10 | 98.17 | 98.17 | 14.66 | 1.09 | 1.01 | ok |
+| StarLightCurves | fixed50 | 98.13 | 98.17 | 75.79 | 6.38 | 5.94 | ok |
+| StarLightCurves | paper50 | 98.14 | 98.17 | 76.06 | 6.38 | 5.95 | ok |
+| StarLightCurves | rec30 | 98.14 | 98.17 | 44.22 | 1.42 | 1.33 | ok |
+
+StarLightCurves paper50 peak RSS: **6.4 GB (5.95 GiB)**.

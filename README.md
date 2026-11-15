@@ -175,8 +175,8 @@ with dataset-bootstrap 95% CI **[−0.261, +0.041]**, passing the −0.3-point m
 Timing repetitions are not independent accuracy resamples.
 
 ElectricDevices completed with fixed 30k in **70.50 s at 6.32 GiB**. The 50k and
-30k sklearn variants crossed the 9 GiB polling guard. These are single stress
-attempts, not measured OS-level OOM events. ElectricDevices is outside the
+30k sklearn variants and the HYDRA hybrid crossed the 9 GiB polling guard.
+These are single stress attempts, not measured OS-level OOM events. ElectricDevices is outside the
 55-dataset aggregate.
 
 ![Accuracy and speed trade-offs](reports/review_revision/tradeoffs_all.png)
