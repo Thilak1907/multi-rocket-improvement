@@ -145,6 +145,7 @@ those from another machine.
 | Initial pooling/ridge/memory comparison | `python scripts/reproduce.py summarize legacy-optimization` | Equivalent-settings rerun; see below |
 | Initial three-repeat timing study | `python scripts/reproduce.py summarize legacy-initial` | Equivalent-settings rerun; see below |
 | Paper/project comparison | `python scripts/compare_paper.py` | Aggregates released and retained CSVs; no training |
+| Section IV reproduction checks (seed study, 30-resample comparison with the paper, StarLightCurves/Crop memory); see [reproduction/README.md](reproduction/README.md) | `python reproduction/analyze.py` | `python reproduction/run_all.py A B C` |
 
 The exact model sources for the two earliest optimization studies were not
 preserved. Their measurements can be reanalysed, but exact source replay cannot

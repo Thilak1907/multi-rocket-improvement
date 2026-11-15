@@ -1,0 +1,12 @@
+Machine:   Linux VM, 2-core Intel Xeon @ 2.30 GHz, 8 GB memory limit (cgroup)
+Threads:   OMP_NUM_THREADS=2, NUMBA_NUM_THREADS=2, OPENBLAS_NUM_THREADS=1, MKL_NUM_THREADS=1
+Python:    3.13.18
+Packages:  numpy 2.5.3, scipy 1.18.1, scikit-learn 1.9.1, numba 0.68.1, pandas 3.0.5, psutil 7.2.2, torch (CPU)
+Code:      multi-rocket-improvement commit c2b7bbe (model defaults unchanged at d4bcdf4;
+           20 stage-A runs re-executed at d4bcdf4 gave identical accuracies)
+Upstream:  ChangWeiTan/MultiRocket 3ccaa4f8ed11769b904af885e17018c39c89a2ac (indices and published results)
+Runs:      stages A and B on 2026-11-12; stage C on 2026-11-12, Crop 50k kills re-recorded on 2026-11-15
+Data:      Beef, Coffee, ECG200, InsectWingbeatSound, StarLightCurves, Crop: UCR 2018 TSVs as shipped in the
+           authors' repository (data/sample). ArrowHead, GunPoint, ItalyPowerDemand, OSULeaf: converted to TSV
+           from the copies bundled with sktime (identical shapes to the UCR 2018 archive; values written with
+           8 significant digits).

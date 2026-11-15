@@ -1,0 +1,2 @@
+[  194.772713] Memory cgroup out of memory: Killed process 210 (python3) total-vm:12052196kB, anon-rss:6263540kB, file-rss:2548kB, shmem-rss:0kB, UID:0 pgtables:14100kB oom_score_adj:0
+[  210.640387] Memory cgroup out of memory: Killed process 217 (python3) total-vm:12059708kB, anon-rss:6263672kB, file-rss:2564kB, shmem-rss:0kB, UID:0 pgtables:14088kB oom_score_adj:0
