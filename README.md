@@ -32,9 +32,24 @@ broader runtime constraints for development.
 
 ## Data
 
-The experiments use 109 fixed-length datasets from the 2018 UCR archive. Read
-the [archive briefing](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/)
-for the download password and dataset background, then run:
+The experiments use 109 fixed-length datasets from the 2018 UCR archive.
+The data and resample indices are **not included in a Git clone**; download
+them before running training experiments.
+
+Download sources:
+
+- **Time-series data:** [official UCR 2018 archive page](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/)
+  and [direct archive ZIP](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/UCRArchive_2018.zip).
+  The [official briefing PDF](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/BriefingDocument2018.pdf)
+  contains the public extraction password and archive background.
+- **Authors' data metadata and resample indices:** [MultiRocket data directory](https://github.com/ChangWeiTan/MultiRocket/tree/main/data)
+  and [indices109 directory](https://github.com/ChangWeiTan/MultiRocket/tree/main/data/indices109).
+  These indices define the train/test resamples used in the experiments; they
+  are separate from the UCR dataset ZIP.
+- **Pinned upstream download used by our script:** [MultiRocket source ZIP](https://codeload.github.com/ChangWeiTan/MultiRocket/zip/3ccaa4f8ed11769b904af885e17018c39c89a2ac).
+  Pinning the revision keeps the index files and metadata reproducible.
+
+To download and place both automatically:
 
 ```bash
 python scripts/download_data.py --upstream --ucr
@@ -52,6 +67,35 @@ If you already downloaded the archive:
 ```bash
 python scripts/download_data.py --upstream --ucr-archive /path/to/UCRArchive_2018.zip
 ```
+
+If the TSV files are already extracted, download just the indices and metadata:
+
+```bash
+python scripts/download_data.py --upstream
+python scripts/reproduce.py verify --data-dir /path/to/UCRArchive_2018
+```
+
+For manual placement, extract the UCR ZIP and copy the authors' `indices109`
+directory so the repository has this structure (avoid an extra nested archive
+directory):
+
+```text
+data/
+├── UCRArchive_2018/
+│   ├── ArrowHead/
+│   │   ├── ArrowHead_TRAIN.tsv
+│   │   └── ArrowHead_TEST.tsv
+│   └── ...
+└── indices109/
+    ├── ArrowHead_INDICES_TRAIN.txt
+    ├── ArrowHead_INDICES_TEST.txt
+    └── ...
+```
+
+The authors' `data/classification_datasets_109.csv` is also needed by the
+collection runner. `--upstream` installs this metadata along with the indices
+and published reference results. Run `python scripts/reproduce.py verify`
+after placement; do not generate replacement index files.
 
 Existing matching files are reused. Input hashes are checked against the recorded
 experiment; a different archive conversion is not silently accepted. Downloads,
