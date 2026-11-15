@@ -50,6 +50,7 @@ htmlcov/
 .hypothesis/
 .tox/
 .nox/
+.cache/
 .ipynb_checkpoints/
 
 # Local environment settings (keep shareable examples)
@@ -67,3 +68,9 @@ htmlcov/
 # Transient benchmark progress (final reports stay versioned)
 /reports/review_revision/progress.json
 /reports/review_revision/progress.md
+
+# Raw measurements are archived in reproducibility/records.zip.
+/reports/**/confirmation_raw.csv
+/reports/**/raw_confirmation.csv
+/reports/**/selection_raw.csv
+/reports/**/ablation_raw.csv

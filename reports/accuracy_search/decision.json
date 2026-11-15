@@ -1,0 +1,14 @@
+{
+  "adopt": false,
+  "status": "retain_previous",
+  "selected": "coarse",
+  "protocol_sha256": "089703c84e3723428b6eaf4ba03aac57f3ffb537b048b55b10c77586e81c4eb2",
+  "analysis_source_sha256": "dc06e6a147df2763e3b8471f8d774b6194b672101b259ddfc2be1327bd97d3ab",
+  "choice_sha256": "e462a08e9016c71fa673c832b6d8e604795f96350f2c01f581a350172c88d4f3",
+  "mean_delta_pp": 0.17123932748901757,
+  "ci_low_pp": -0.05510095814072698,
+  "ci_high_pp": 0.4437642632837603,
+  "runtime_ratio": 1.618942315883786,
+  "datasets": 55,
+  "resamples": 3
+}

@@ -18,8 +18,6 @@ def get_version(rel_path):
         raise RuntimeError("Unable to find version string.")
 
 
-# Add your dependencies in requirements.txt
-# Note: you can add test-specific requirements in tox.ini
 requirements = []
 with open('requirements.txt') as f:
     for line in f:
@@ -28,33 +26,26 @@ with open('requirements.txt') as f:
             requirements.append(stripped)
 
 
-# https://github.com/pypa/setuptools_scm
-use_scm = {"write_to": "MultiRocket/_version.py"}
-
 setup(
     name='MultiRocket',
     author='Chang Wei Tan, Angus Dempster, Christoph Bergmeir, Geoffrey Webb',
     author_email='ChangWeiTan',
     license='GNU General Public License v3.0',
-    url='https://github.com/ChangWeiTan/MultiRocket',
+    url='https://github.com/Thilak1907/multi-rocket-improvement',
     description='''MultiRocket: Multiple pooling operators and transformations for fast and effective time series classification''',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
     packages=find_packages(include=['multirocket']),
-    # py_modules=['utils'],
-    python_requires='>=3.6',
+    python_requires='>=3.11',
     install_requires=requirements,
     version=get_version("multirocket/__init__.py"),
-    setup_requires=['setuptools_scm'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Testing',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.11',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: General Public License',
     ],

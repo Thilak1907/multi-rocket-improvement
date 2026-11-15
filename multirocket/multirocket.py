@@ -449,6 +449,7 @@ class MultiRocket:
             inplace_processing=None,
             chunked_prediction=None,
             ridge_feature_limit_bytes=693 * 1024**2,
+            ridge_alphas=None,
     ):
         self.name = "MultiRocket"
 
@@ -475,6 +476,8 @@ class MultiRocket:
         if not isinstance(ridge_feature_limit_bytes, (int, np.integer)) or ridge_feature_limit_bytes < 1:
             raise ValueError("ridge_feature_limit_bytes must be a positive integer")
         self.ridge_feature_limit_bytes = ridge_feature_limit_bytes
+        # None preserves the original grid exactly. Explicit grids are opt-in.
+        self.ridge_alphas = ridge_alphas
         self.prediction_batch_size = prediction_batch_size
         self.optimized_transform = optimized_transform
         self.fused_prediction = fused_prediction
@@ -556,7 +559,8 @@ class MultiRocket:
             self.classifier = make_pipeline(
                 StandardScaler(copy=not self.inplace_processing),
                 ridge(
-                    alphas=np.logspace(-3, 3, 10)
+                    alphas=(np.logspace(-3, 3, 10)
+                            if self.ridge_alphas is None else self.ridge_alphas)
                 )
             )
         else:

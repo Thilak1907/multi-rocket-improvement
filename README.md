@@ -1,57 +1,180 @@
-# MultiRocket
+# MultiRocket efficiency experiments
 
-**Multiple pooling operators and transformations for fast and effective time series classification.**
+This repository extends [MultiRocket](https://doi.org/10.1007/s10618-022-00844-1)
+with a smaller feature budget, blocked ridge fitting, reusable extraction buffers,
+and bounded-memory prediction. The recommended univariate configuration uses
+**29,568 features and all four pooling operators**. It is feature-budget reduction,
+not learned pruning.
 
-MultiRocket extracts convolution features from raw time series and their first
-order differences, using four pooling operators: PPV, LSPV, MPV, and MIPV.
-This repository includes the original implementation and an evaluated set of
-optimizations for the univariate ridge pipeline.
+On the project's 55-dataset confirmation set, the corrected 30k configuration
+was **1.66× faster** and used **31.0% less median paired peak RSS** than a fresh
+corrected 50k baseline. Across three accuracy resamples, it met the predeclared
+−0.3 percentage-point non-inferiority margin. It did not establish an accuracy gain.
 
-[Original paper](https://arxiv.org/abs/2102.00457) ·
-[Current benchmark report](reports/review_revision/report.md) ·
-[All reports](reports/README.md)
+## Environment
 
-## Recommended configuration
-
-Use **30k features, all four pooling operators, blocked ridge, buffered
-extraction, in-place processing, 256-row prediction batches, and folded
-scaling**. The nominal 30k budget produces **29,568 feature columns**.
-
-The size-based sklearn/blocked-ridge switch was implemented and evaluated, but
-it did not meet the predeclared requirement of a 3% runtime improvement over
-the fixed blocked backend. The fixed backend remains the recommendation.
-
-Corrected first-difference alignment is enabled: a differenced series has length
-`L-1`, and the convolution accumulation now uses that length. Earlier experiments
-used the legacy alignment. Their results remain available separately.
-
-## Setup
-
-Run commands from the repository root. The corrected experiments used Python
-3.11. Exact NumPy, SciPy, sklearn, Numba, and Torch versions are recorded in
-the local `output/review_revision/corrected_v1/protocol.json`.
+Use **Python 3.11** and run commands from the repository root:
 
 ```bash
-python3 -m venv .venv
+git clone https://github.com/Thilak1907/multi-rocket-improvement.git
+cd multi-rocket-improvement
+python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install numpy scipy pandas numba scikit-learn psutil pytz
+python -m pip install -r requirements-reproduce.txt
+python -m unittest discover -s tests -v
 ```
 
-For benchmark plots and the HYDRA comparisons, also install:
+`requirements-reproduce.txt` pins the numerical packages used for the recorded
+CPU experiments. [Environment details](reproducibility/environment.json) record
+the platform and thread counts. Other platforms can produce different timings
+and small numerical differences. No GPU is required. `requirements.txt` provides
+broader runtime constraints for development.
+
+## Data
+
+The experiments use 109 fixed-length datasets from the 2018 UCR archive. Read
+the [archive briefing](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/)
+for the download password and dataset background, then run:
 
 ```bash
-python -m pip install matplotlib torch
+python scripts/download_data.py --upstream --ucr
+python scripts/reproduce.py verify
 ```
 
-These commands install the working dependencies without pinning a reproduction
-environment. `requirements.txt` retains the original project's older pins,
-including a CUDA-specific Torch build; it is not the environment used for the
-corrected benchmarks. The multivariate runner additionally requires `sktime`.
+The downloader prompts for the public archive password when necessary. It installs:
 
-## Run a dataset
+- TRAIN/TEST TSVs in `data/UCRArchive_2018/<dataset>/`;
+- the authors' resample indices in `data/indices109/`;
+- dataset metadata and published result CSVs from a pinned upstream revision.
 
-Place the UCR archive under `data/UCRArchive_2018`, with one directory per
-dataset containing its TRAIN and TEST files. Run the recommended bundle with:
+If you already downloaded the archive:
+
+```bash
+python scripts/download_data.py --upstream --ucr-archive /path/to/UCRArchive_2018.zip
+```
+
+Existing matching files are reused. Input hashes are checked against the recorded
+experiment; a different archive conversion is not silently accepted. Downloads,
+raw datasets, local environments, and generated runs are ignored by Git.
+
+## Reproduce results
+
+There are two separate operations.
+
+**Rebuild tables and figures from the supplied measurements** — no datasets or
+training required:
+
+```bash
+python scripts/reproduce.py summarize all
+python scripts/compare_paper.py
+```
+
+Reports are generated under `output/reproductions/recorded/<profile>/reports/`.
+The checked-in measurements and reports are not overwritten.
+
+**Rerun the corrected experiments from data**:
+
+```bash
+python scripts/reproduce.py run review --smoke
+python scripts/reproduce.py run review
+```
+
+The first command trains only ArrowHead to check setup. The second runs the
+component ablation, twelve-configuration comparison, repeated finalist timings,
+three-resample accuracy check, ElectricDevices stress test, and legacy replay.
+It uses four Numba/Torch threads, one BLAS thread, and a 9 GiB per-worker memory
+guard. Allow several hours on a CPU; runtime depends on the machine. Jobs are
+resumable. A guard stop is recorded as a failure rather than omitted.
+
+Each rerun uses its recorded runtime sources in an isolated directory under
+`output/reproductions/rerun/`. This avoids depending on ignored local protocols
+or overwriting the current implementation. Timings will not exactly reproduce
+those from another machine.
+
+| Report/result | Rebuild from measurements | Rerun from data |
+| --- | --- | --- |
+| Main results, ablation, trade-off chart, accuracy interval, stress | `python scripts/reproduce.py summarize review` | `python scripts/reproduce.py run review` |
+| Additional-view accuracy experiment | `python scripts/reproduce.py summarize accuracy` | `python scripts/reproduce.py run accuracy` |
+| Square-root/log feature experiment | `python scripts/reproduce.py summarize feature-power` | `python scripts/reproduce.py run feature-power` |
+| Wider ridge-alpha experiment | `python scripts/reproduce.py summarize ridge-range` | `python scripts/reproduce.py run ridge-range` |
+| Earlier legacy combination search | `python scripts/reproduce.py summarize legacy-combinations` | `python scripts/reproduce.py run legacy-combinations` |
+| Initial pooling/ridge/memory comparison | `python scripts/reproduce.py summarize legacy-optimization` | Equivalent-settings rerun; see below |
+| Initial three-repeat timing study | `python scripts/reproduce.py summarize legacy-initial` | Equivalent-settings rerun; see below |
+| Paper/project comparison | `python scripts/compare_paper.py` | Aggregates released and retained CSVs; no training |
+
+The exact model sources for the two earliest optimization studies were not
+preserved. Their measurements can be reanalysed, but exact source replay cannot
+be claimed. An explicit `--allow-equivalent` flag permits a later legacy
+implementation with the same settings. See [the reproduction guide](docs/reproducing.md)
+for those commands, output locations, source provenance, and interpretation.
+
+## Results
+
+All rows below use corrected first-difference features on the same 55 dataset
+names. Accuracy is resample 1; timings use three repetitions. Speed-up is the
+ratio of summed per-dataset median fit-plus-predict times. Memory saving is the
+median paired reduction in total process peak RSS.
+
+| Configuration | Accuracy | Speed-up | Peak RSS reduction |
+| --- | ---: | ---: | ---: |
+| Corrected 50k/sklearn baseline | 87.760% | 1.00× | — |
+| **30k/blocked ridge** | **87.770%** | **1.66×** | **31.0%** |
+| 30k/size-based ridge | 87.770% | 1.65× | 22.4% |
+| 30k/sklearn ridge | 87.770% | 1.68× | 22.3% |
+| 10k/four operators | 87.178% | 4.51× | 49.6% |
+| 20k + HYDRA | 87.694% | 0.78× | 23.0% |
+
+Across accuracy resamples 1–3, corrected 50k averaged **87.399%**, and retained
+30k averaged **87.285%**. The paired change was **−0.114 percentage points**,
+with dataset-bootstrap 95% CI **[−0.261, +0.041]**, passing the −0.3-point margin.
+Timing repetitions are not independent accuracy resamples.
+
+ElectricDevices completed with fixed 30k in **70.50 s at 6.32 GiB**. The 50k and
+30k sklearn variants crossed the 9 GiB polling guard. These are single stress
+attempts, not measured OS-level OOM events. ElectricDevices is outside the
+55-dataset aggregate.
+
+![Accuracy and speed trade-offs](reports/review_revision/tradeoffs_all.png)
+
+The chart uses one common timing run for all configurations. Full finalist,
+stage-time, model-size, and per-dataset results are in the
+[corrected report](reports/review_revision/report.md).
+
+### Comparison with the paper
+
+The authors' released result CSVs give the following accuracy values. The
+55-dataset rows are our aggregation over the project's confirmation names;
+they are not a separate table reported in the paper.
+
+| Source | Datasets | Resamples | Features | Mean accuracy |
+| --- | ---: | --- | ---: | ---: |
+| Authors' released MultiRocket results | 109 | 30 | 49,728 | 87.967% |
+| Authors' results, project subset | 55 | 30 | 49,728 | 87.654% |
+| Authors' results, project subset | 55 | Index 1 | 49,728 | 87.987% |
+| Project corrected baseline | 55 | Indices 1–3 | 49,728 | 87.399% |
+| Project retained configuration | 55 | Indices 1–3 | 29,568 | 87.285% |
+
+These use different kernel seeds, feature correctness modes, and resampling
+coverage. They provide context rather than a paired test against the paper.
+The paper's Table 2 reports 15.77 minutes of 50k training over 112 problems on
+its single-thread setup. Our 1.66× claim uses our own paired baseline; we do
+not divide timings from different hardware, thread counts, and dataset sets.
+The [comparison table](reports/paper_comparison/comparison.md) is regenerated by
+`scripts/compare_paper.py` from the released CSVs.
+
+## Use the model
+
+```python
+from multirocket.presets import make_multirocket
+
+model = make_multirocket(random_state=20261111)
+model.fit(X_train, y_train, predict_on_train=False)
+predictions = model.predict(X_test)
+```
+
+Inputs have shape `(number_of_series, series_length)`. The preset uses blocked
+ridge, buffered extraction, in-place processing, 256-row prediction batches, and
+folded scaling. The base constructor still defaults to 50k/sklearn. For one dataset:
 
 ```bash
 python main_ucr.py -d data/UCRArchive_2018 -p ArrowHead -i 0 -n 30000 -t 4 \
@@ -59,149 +182,49 @@ python main_ucr.py -d data/UCRArchive_2018 -p ArrowHead -i 0 -n 30000 -t 4 \
   --optimized-transform --fused-prediction --seed 20261111
 ```
 
-Results are written under `output/multirocket/`. Configuration-specific names
-and the `_diff1fixed` suffix distinguish corrected runs from legacy output.
+`--legacy-first-difference` reproduces the earlier alignment. `--classifier
+auto_ridge` enables the evaluated size switch, which was not adopted. The
+multivariate entry point is inherited code and is outside these optimization claims.
 
-| Entry point | Purpose |
-| --- | --- |
-| `main_ucr.py` | Run one univariate UCR dataset |
-| `main_ucr_109.py` | Run the 109-dataset UCR collection |
-| `main_mtsc.py` | Run a multivariate dataset using the original pipeline |
+## Scope and repository layout
 
-Use `python main_ucr.py --help` for the full CLI. Common options are `-d` for the
-archive path, `-p` for the dataset, `-i` for the resample, `-n` for the feature
-budget, `-t` for threads, and `--seed` for reproducible kernel generation.
-The optimization flags described here apply to the univariate implementation.
+Confirmation dataset names were inspected during earlier development. The
+accuracy analysis has three resamples, rather than the paper's 30. Blocked ridge
+still has quadratic memory in training cases. Folded scaling retains an extra
+coefficient copy, so lower working memory does not imply a smaller saved model.
+No general accuracy, multivariate, GPU, or energy improvement is established.
+Negative results from optional accuracy experiments are retained in the
+[report index](reports/README.md).
 
-### Python usage
-
-```python
-from multirocket.presets import make_multirocket
-
-# X_train and X_test: arrays shaped (number of series, series length).
-model = make_multirocket(random_state=20261111)
-model.fit(X_train, y_train, predict_on_train=False)
-predictions = model.predict(X_test)
+```text
+multirocket/       model and feature-extraction code
+experiments/      benchmark workers and analysis
+scripts/          data preparation and reproduction entry points
+tests/            numerical and protocol checks
+reports/          recorded tables, figures, and conclusions
+reproducibility/  checksummed measurements, pinned sources, environment metadata
+docs/             method and reproduction notes
 ```
 
-| Preset | Configuration |
-| --- | --- |
-| `previous30` (recommended) | Corrected features and the fixed blocked-ridge bundle |
-| `candidate30` | Corrected features with size-based ridge selection |
-| `legacy30` | Previous bundle with legacy first-difference alignment |
+[Implementation notes](docs/technical_report.md) explain the algorithms and
+changes. [Reproduction details](docs/reproducing.md) describe every experiment.
 
-The base `MultiRocket` constructor and CLI retain their 50k/sklearn defaults;
-use the factory or explicit CLI flags to select the recommended 30k bundle.
+## Attribution and license
 
-### Optional configurations
-
-- `--classifier auto_ridge` selects sklearn below 693 MiB of estimated training
-  features and blocked ridge at or above it. The estimate is
-  `n_train * actual_feature_columns * 4`; change the threshold with
-  `--ridge-feature-limit-mib`.
-- `--legacy-first-difference` reproduces the original alignment.
-- `--pooling LSPV+MPV` retains a selected pair. The feature budget still specifies
-  the original four-operator kernel budget, so removing two operators halves
-  the columns rather than adding replacement kernels.
-- A nominal 10k budget offers greater speed and memory savings with an observed
-  accuracy cost. It is an alternative trade-off, rather than the default.
-
-## Measured results
-
-The table uses **corrected features throughout**, with 55 confirmation datasets
-on resample 1 and three timing repetitions for each finalist. Speed-up compares
-summed per-dataset median fit-plus-predict times with the corrected 50k baseline.
-Memory savings are the median paired reductions in process peak RSS.
-
-| Configuration | Mean accuracy | Overall speed-up | Peak RSS reduction |
-| --- | ---: | ---: | ---: |
-| Corrected 50k reference | 87.760% | 1.00× | — |
-| **30k + blocked ridge** | **87.770%** | **1.66×** | **31.0%** |
-| 30k + size-based ridge | 87.770% | 1.65× | 22.4% |
-| 30k + sklearn ridge | 87.770% | 1.68× | 22.3% |
-| 10k, four operators | 87.178% | 4.51× | 49.6% |
-| 20k + HYDRA | 87.694% | 0.78× | 23.0% |
-
-Baseline, fixed 30k, and routed 30k were additionally evaluated on resamples 2
-and 3. Across all three accuracy resamples, the paired mean change for fixed
-30k was **−0.114 percentage points**, with a dataset-bootstrap 95% interval of
-**[−0.261, +0.041]**. This passes the predeclared **−0.3-point non-inferiority
-margin**, supporting no material mean loss within that margin. It does not
-establish an accuracy gain or equal accuracy on every dataset. Timing repetitions
-are not additional accuracy resamples.
-
-On **ElectricDevices**, fixed 30k completed in **70.50 seconds at 6.32 GiB** peak
-RSS. Both the corrected 50k reference and 30k sklearn variant crossed the 9 GiB
-polling guard. These are single stress attempts; guard stops are not proof of
-operating-system OOM failures. ElectricDevices is excluded from the 55-dataset
-confirmation aggregates.
-
-![Accuracy and speed trade-offs](reports/review_revision/tradeoffs_all.png)
-
-The chart uses one common timing repetition for all eleven original
-configurations plus size routing; the finalist table above uses three.
-The [full report](reports/review_revision/report.md) includes balanced accuracy,
-macro F1, fit and prediction stages, model size, per-dataset changes, alpha and
-prediction parity, ablation, and the adoption decision.
-
-### Interpretation and limits
-
-- The older **1.45× / +0.153-point** result belongs to the legacy alignment and
-  earlier benchmark run. See the [previous combination search](reports/combination_search/report.md).
-- The current evaluation has three accuracy resamples, rather than the paper's
-  30. Dataset names were inspected during earlier development, so confirmation
-  is not a newly independent collection. Paper/repository comparisons are kept
-  separate in the [optimization report](reports/optimization_comparison/report.md).
-- Timings exclude imports, loading, and JIT warmup; process RSS includes them.
-  Runs use four Numba/Torch threads and one BLAS thread. Speed-ups are local
-  paired measurements, not comparisons against the paper's hardware.
-- Blocked ridge still requires quadratic memory in training cases and an
-  eigendecomposition. Folded scaling keeps an extra coefficient copy, increasing
-  saved model size. No energy or GPU measurements were made.
-
-## Reproduce the experiments
-
-The `experiments/` folder contains the benchmark runners and report generators.
-Keep it to reproduce the comparisons; it is not needed for ordinary prediction.
-
-```bash
-VECLIB_MAXIMUM_THREADS=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 \
-  python -m experiments.review_revision --stage all
-python -m experiments.summarize_revision
-```
-
-The runner records the selection/confirmation split, frozen choices, source
-hashes, dataset indices, seeds, and per-job measurements under
-`output/review_revision/corrected_v1`. Final summaries and figures are written
-to `reports/review_revision`. Raw output, datasets, and the virtual environment
-are excluded from Git; retained CSVs accompany the reports.
-
-## Tests
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-Tests cover ridge alpha/prediction parity, pooling, buffered extraction,
-first-difference convolution against an independent oracle, preset selection,
-size-routing boundaries, and experiment statistics.
-
-## Citation
-
-Please cite the original MultiRocket work when using this implementation:
+This project builds on the authors' [MultiRocket repository](https://github.com/ChangWeiTan/MultiRocket).
+Please cite:
 
 ```bibtex
-@article{Tan2021MultiRocket,
-  title={{MultiRocket}: Multiple pooling operators and transformations for fast and effective time series classification},
-  author={Tan, Chang Wei and Dempster, Angus and Bergmeir, Christoph and Webb, Geoffrey I},
-  year={2021},
-  journal={arxiv:2102.00457}
+@article{tan2022multirocket,
+  title={MultiRocket: multiple pooling operators and transformations for fast and effective time series classification},
+  author={Tan, Chang Wei and Dempster, Angus and Bergmeir, Christoph and Webb, Geoffrey I.},
+  journal={Data Mining and Knowledge Discovery},
+  volume={36},
+  pages={1623--1646},
+  year={2022},
+  doi={10.1007/s10618-022-00844-1}
 }
 ```
 
-## License and acknowledgements
-
-See [LICENSE](LICENSE). The vendored HYDRA reference implementation retains its
-[GPL-3.0 license and attribution](experiments/vendor/README.md).
-Thanks to the MultiRocket authors and the maintainers of the
-[UCR time series archive](https://www.cs.ucr.edu/~eamonn/time_series_data_2018/).
+See [LICENSE](LICENSE). Vendored HYDRA code retains its
+[upstream attribution and GPL-3.0 license](experiments/vendor/README.md).

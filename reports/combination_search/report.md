@@ -173,4 +173,4 @@ This is a finite candidate search; thread-count sweeps, GPU execution, iterative
 
 The initial search and repetition commands are documented in README.md. Existing protocols reject source changes rather than mixing implementations. The repetition driver records where unchanged selection and first-repeat results were reused. All job failures, including selection and guard stops, are in failures.csv.
 
-Generate this report with `.venv/bin/python -m experiments.summarize_combinations --output output/combination_search/20261111_repeats3 --refinement-output output/combination_search/20261111_fast30`.
+Rebuild the recorded tables with `python scripts/reproduce.py summarize legacy-combinations`. For new measurements use `python scripts/reproduce.py run legacy-combinations`. See [reproduction details](../../docs/reproducing.md) for data, source versions, and limitations.

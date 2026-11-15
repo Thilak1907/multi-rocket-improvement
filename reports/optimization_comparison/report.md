@@ -155,6 +155,6 @@ Five lowest and five highest paired accuracy changes for the combined variant (s
 
 This is a single train/test split per dataset, not the paper's full 30-resample replication. Dataset-bootstrap confidence intervals for mean paired accuracy differences are in summary.json; they describe variability across this held-out collection, not across training resamples. Pair selection and timings may vary with seeds, versions, and hardware.
 The frozen protocol, dataset/source SHA-256 hashes, selected pair, all raw timing/RSS records, predictions, and worker logs are in `output/optimization_comparison/50k_split42_alpha_tie`. Per-dataset, stage, parity, ElectricDevices and summary CSV files are beside this report.
-Run: `.venv/bin/python -m experiments.compare_optimizations --output output/optimization_comparison/50k_split42_alpha_tie --repeats 1` (resumes matching completed jobs); then `.venv/bin/python -m experiments.summarize_optimizations --output output/optimization_comparison/50k_split42_alpha_tie`. Use a new output directory after source changes. Run tests with `.venv/bin/python -m unittest discover -s tests -v`.
+Rebuild the recorded tables with `python scripts/reproduce.py summarize legacy-optimization`. For new measurements use `python scripts/reproduce.py run legacy-optimization --allow-equivalent`. See [reproduction details](../../docs/reproducing.md) for data, source versions, and limitations.
 
 Job failures: ElectricDevices baseline repeat 0: rss_limit Full records are in electricdevices_status.csv and the raw experiment output.

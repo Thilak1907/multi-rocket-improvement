@@ -1,0 +1,9 @@
+{
+  "adopt": false,
+  "status": "retain_previous",
+  "selected": null,
+  "protocol_sha256": "f1fc98ed096a4a54fbde9db7e62d298535a488bde86ae27807cd6609c2078aa5",
+  "analysis_source_sha256": "f2b1a8ed0477ac7912e1c71db9105268c9d734f8e1826818cf61ad599e02dece",
+  "choice_sha256": "4c4c9ecb1ae4d99f9d1ffe705e27589b5ed80745a58a56484f4e1588af08932d",
+  "reason": "The expanded grid did not pass the TRAIN-only selection gate"
+}

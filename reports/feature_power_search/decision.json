@@ -1,0 +1,9 @@
+{
+  "adopt": false,
+  "status": "retain_previous",
+  "selected": null,
+  "protocol_sha256": "90914945ba69abaed85880fea55beb23c3f6e4176bddd62c6e6afd42b21786df",
+  "analysis_source_sha256": "ac71aff6210b8dd970a83355d91e791edf590336c594feb0a4f632d3aed0db86",
+  "choice_sha256": "728e4010a6068deec985fc271f72f72f825014e21cf6f36ebcc524c949a89d44",
+  "reason": "Neither map passed the TRAIN-only selection gate"
+}

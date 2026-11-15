@@ -1,0 +1,24 @@
+{
+  "python": "3.11.15",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "packages": {
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "numba": "0.67.0",
+    "llvmlite": "0.49.0",
+    "scikit-learn": "1.9.1",
+    "torch": "2.13.0",
+    "matplotlib": "3.11.1",
+    "psutil": "7.2.2",
+    "pytz": "2026.4",
+    "tqdm": "4.67.3",
+    "threadpoolctl": "3.7.0",
+    "joblib": "1.6.0"
+  },
+  "numba_threads": 4,
+  "torch_threads": 4,
+  "blas_threads": 1,
+  "timing": "wall clock; imports, data load, JIT warmup excluded",
+  "memory": "process peak RSS; 9 GiB polling guard"
+}

@@ -131,6 +131,6 @@ ElectricDevices is in the selection half and excluded from the 55-dataset aggreg
 
 ## Reproduction and limits
 
-Run `.venv/bin/python -m experiments.review_revision --stage all`, then `.venv/bin/python -m experiments.summarize_revision`. A frozen protocol, source snapshots, dataset/index hashes, model configurations, predictions and per-job logs remain under `output/review_revision/corrected_v1`. Four Numba/Torch threads and one BLAS thread are used. Imports, data loading and warmup are excluded from timings; process RSS includes them.
+Rebuild the recorded tables with `python scripts/reproduce.py summarize review`. For new measurements use `python scripts/reproduce.py run review`. See [reproduction details](../../docs/reproducing.md) for data, source versions, and limitations.
 
 This is three accuracy resamples, not the paper’s 30-resample replication. The new “held-out” dataset names have been inspected during earlier development; these are paired confirmation measurements, not a newly independent collection. Blocked ridge still needs quadratic memory and a cubic eigendecomposition in training cases. No energy or GPU measurements were made.
