@@ -191,14 +191,10 @@ These are single stress attempts, not measured OS-level OOM events. ElectricDevi
 
 ![Accuracy and speed trade-offs](reports/review_revision/tradeoffs_all.png)
 
-The orange star marks our retained **30k blocked-ridge** configuration. The
-dotted horizontal line is reference accuracy; the solid vertical line is 1×
-speed-up; the dashed line is the accuracy/speed Pareto frontier, which does not
-include memory. The two zoom panels separate nearby points without moving
-them. Standalone HYDRA (64 groups) and the LSPV+MPV operator pair are additional
-controls. See the [label mapping](reports/review_revision/plot_labels.csv).
-For the paper, use the [vector PDF](reports/review_revision/tradeoffs_all.pdf)
-at two-column width.
+The plot uses the original configuration IDs: `fast30` is the retained
+30k blocked-ridge model; `auto30` (the star) is the optional routing experiment.
+The dotted horizontal line is reference accuracy, the vertical line marks 1×
+speed-up, and the dashed frontier considers accuracy and speed only.
 
 The chart uses one common timing run for all configurations. Full finalist,
 stage-time, model-size, and per-dataset results are in the

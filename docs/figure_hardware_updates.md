@@ -1,60 +1,9 @@
-# Figure and environment revisions
+# Environment and comparison revisions
 
-The updated plot is available as
-[PDF](../reports/review_revision/tradeoffs_all.pdf),
-[PNG](../reports/review_revision/tradeoffs_all.png), and
-[SVG](../reports/review_revision/tradeoffs_all.svg).
-It has 10-point axes, direct labels instead of a large legend, and two zoom
-panels with unchanged data coordinates. The retained `fast30` model is the
-orange star. All twelve configurations remain present.
-
-A local manuscript copy with these edits is at
-`output/manuscript_audit/manuscript.figure-hardware.tex`; the figure files are
-alongside it. It starts from the previously checked source and preserves its
-result tables. The supplied attachment is unchanged.
-
-## 1. Replace the existing trade-off figure
-
-In “Efficiency and accuracy on resample 1”, replace the whole block from
-`\begin{figure}[t]` through `\end{figure}` for `fig:tradeoff` with:
-
-```latex
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{tradeoffs_all.pdf}
-\caption{Accuracy and speed on 55 datasets, corrected MultiRocket features,
-resample 1 and one common timing run. Panels (b) and (c) zoom nearby points
-without jitter. The orange star is the retained 30k blocked-ridge model
-(\texttt{fast30}); 30k routed and sklearn denote \texttt{auto30} and
-\texttt{fused30}. Budgets are nominal. Optimized four-operator models use
-buffered extraction, in-place processing, 256-row batches and folded scaling;
-50k buffers omits folding, 50k sklearn bundle includes it, and 50k blocked
-uses the blocked head. The 50k reference omits that optimization bundle.
-HYDRA-only uses 64 groups; the hybrid combines 20k MultiRocket with 32 HYDRA
-groups; the LSPV+MPV pair retains 24,864 columns. The dotted horizontal line
-is reference accuracy, the solid vertical line is $1\times$ speed-up, and
-the dashed line joins the observed accuracy/speed Pareto frontier, which
-does not account for memory. The main table uses three timing repetitions.}
-\label{fig:tradeoff}
-\end{figure*}
-```
-
-Put `tradeoffs_all.pdf` next to the `.tex` file or adapt its graphics path.
-Use the full two-column `\textwidth`; reducing it to one column defeats the
-font-size correction. Zoom panels deliberately magnify small differences and
-are not evidence that the tiny accuracy differences are significant.
-
-Immediately before this figure, after “the two should be read separately”, add:
-
-```latex
-Two additional representation controls are standalone HYDRA with 64 groups
-(\texttt{hydra64}) and a nominal 50k kernel-budget model retaining only LSPV
-and MPV (\texttt{pair50}, 24,864 columns); neither is the retained configuration.
-```
-
-The [identifier/label mapping](../reports/review_revision/plot_labels.csv) covers
-all points. The [plot metadata](../reports/review_revision/plot_metadata.json)
-records their original accuracy and speed coordinates.
+The previous trade-off image and plotting code have been restored. The hardware,
+Crop clarification, and released/reference accuracy-gap updates below remain.
+The local source copy is `output/manuscript_audit/manuscript.figure-hardware.tex`;
+its original figure block has also been restored.
 
 ## 2. Main machine: “Code and environment”
 
@@ -137,19 +86,7 @@ therefore must not be presented as the cause of that particular gap. It is a
 limitation of the broader three-versus-30 comparison. No single cause of the
 gap has been experimentally isolated.
 
-## Reproduction
+## Figure reproduction
 
-```bash
-python -m experiments.plot_tradeoffs
-```
-
-This renders the checked-in first-run table. `summarize_revision.py` now calls
-the same renderer. The checked source bundle also includes the updated analysis
-and renderer, so a fresh `scripts/reproduce.py summarize review` produces the
-same presentation without changing the pinned numerical runtime sources.
-Existing workspaces created with the old bundle retain their hash protection;
-use a fresh `--workspace` directory after a source-bundle update.
-
-The new manuscript copy passes the numeric-table audit. A PDF manuscript build
-still requires a TeX installation and the user's `refs.bib`, neither of which
-was supplied for this check.
+Use `python scripts/reproduce.py summarize review` to rebuild the original
+figure from the recorded runs. The pinned source bundle has also been restored.

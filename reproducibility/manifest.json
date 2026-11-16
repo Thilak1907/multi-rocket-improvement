@@ -5,7 +5,7 @@
       "output": "review_revision/corrected_v1",
       "report": "review_revision",
       "archive": "review-source.zip",
-      "sha256": "c6c26bbe8b558a1994c67edbfb511f600be6a9fc39ca26fb5bed1023fed3a529",
+      "sha256": "dc362c0bc12a3c1ec2f4b4f74c3ac85f233175b5afdc09223fbc40a7f0777d84",
       "files": {
         "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
         "experiments/accuracy_search.py": "854306bd41b1afb63ad9b9fce674db9e7d725717bbbc8797d4854e90ee3de413",
@@ -13,7 +13,6 @@
         "experiments/compare_optimizations.py": "d504bc9d95f38aaab0d3389fe18e19abf4e5a609822557832edfc02884718a32",
         "experiments/feature_power_search.py": "7508be32b08f09ef0970f7a0701f60c09e6d2fdd99eb78b348ee50fa7cfdfdc6",
         "experiments/hydra_model.py": "b846bf03110f58f791bbb27009daa4e036f3fb67830dc764f17ac94daa297bfa",
-        "experiments/plot_tradeoffs.py": "39261e1de0734233f3566e2212b5aba026d3acdcea829cb7094fab3dfa2b6cb4",
         "experiments/refine_fast30.py": "b8fe09f79c7b36a027a2efcc9f340ced8316763d6e439ee1df5c04af9eb7ff90",
         "experiments/repeat_confirmation.py": "9c7c82375ad8cc76b009fc4c779a3a0a8f41262c74466f9cbee96539a1573967",
         "experiments/review_progress.py": "b0cc695e07d3546a546f0fea5b9b324b1dd51a3be4b5b319011799b3b04db5c8",
@@ -24,7 +23,7 @@
         "experiments/summarize_combinations.py": "4813069fb25fa70e78a872128ea29d05b56225320c9614b3bbc977f459afcb4b",
         "experiments/summarize_feature_power.py": "ac71aff6210b8dd970a83355d91e791edf590336c594feb0a4f632d3aed0db86",
         "experiments/summarize_optimizations.py": "a771be516dcb7dcfcddbcb1909a04cc54605342e1be3a13891e5700a1b007812",
-        "experiments/summarize_revision.py": "fc4e33445bf97b92ce781cd5eed2c9e51b89fbf1e69322649e06d39ed1effbb6",
+        "experiments/summarize_revision.py": "64408df0f18ed59b1c89bb931d2fae67339b734b98d760b0e7a47fe2ba172b7b",
         "experiments/summarize_ridge_range.py": "f2b1a8ed0477ac7912e1c71db9105268c9d734f8e1826818cf61ad599e02dece",
         "experiments/vendor/HYDRA_LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
         "experiments/vendor/README.md": "5fdd2f0c32b48fd46938e71ecbd03f8b98a8293a329ff62711327eeef46f6404",
@@ -45,15 +44,7 @@
       },
       "source_fidelity": "recorded-runtime-sources",
       "unavailable_original_sources": [],
-      "original_protocol_sha256": "f8b3eca6a135a12cbc58f33bed13f2ee309d4414aa7ea2852800e6308c8e0d17",
-      "analysis_update": {
-        "date": "2026-11-16",
-        "reason": "Readable directly labelled trade-off figure; numerical runtime sources and recorded values unchanged",
-        "files": [
-          "experiments/summarize_revision.py",
-          "experiments/plot_tradeoffs.py"
-        ]
-      }
+      "original_protocol_sha256": "f8b3eca6a135a12cbc58f33bed13f2ee309d4414aa7ea2852800e6308c8e0d17"
     },
     "accuracy": {
       "output": "accuracy_search/views_v1",
