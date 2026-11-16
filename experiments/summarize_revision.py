@@ -231,36 +231,8 @@ def main():
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    fig,ax=plt.subplots(figsize=(11,6),layout='constrained')
-    best_accuracy=-np.inf;frontier=[]
-    for _,r in chart.sort_values('speedup',ascending=False).iterrows():
-        if r.accuracy>best_accuracy:
-            frontier.append((r.speedup,r.accuracy*100));best_accuracy=r.accuracy
-    if frontier:
-        f=np.array(sorted(frontier));ax.plot(f[:,0],f[:,1],color='.55',lw=1.2,ls='--',zorder=1)
-    for i,(_,r) in enumerate(chart.sort_values('speedup').iterrows()):
-        marker='*' if r.variant=='auto30' else 'o'
-        point=ax.scatter(r.speedup,r.accuracy*100,s=180 if marker=='*' else 65,marker=marker,
-                         color=plt.get_cmap('tab20')(i),label=r.variant,zorder=3)
-        point.set_gid(r.variant)
-    ax.axvline(1,color='.6',ls='--',lw=1)
-    baseline_point=chart[chart.variant=='baseline50']
-    if len(baseline_point):ax.axhline(float(baseline_point.iloc[0].accuracy)*100,color='.7',ls=':',lw=1)
-    ax.grid(alpha=.2)
-    ax.set_xlabel('Complete fit + prediction speedup (higher is better)');ax.set_ylabel('Mean test accuracy (%)')
-    ax.set_title(f'Corrected kernels: all 11 original configurations + size-based ridge\n{len(common)} common UCR datasets, resample 1, uniform first timing run')
-    ax.legend(loc='center left',bbox_to_anchor=(1,0.5),fontsize=9,title='Configuration')
-    fig.savefig(report/'tradeoffs_all.png',dpi=200);fig.savefig(report/'tradeoffs_all.svg');plt.close(fig)
-    import xml.etree.ElementTree as ET
-    svg=ET.parse(report/'tradeoffs_all.svg');namespace='{http://www.w3.org/2000/svg}'
-    by_name=chart.set_index('variant')
-    for element in svg.getroot().iter():
-        name=element.get('id')
-        if name in by_name.index:
-            row=by_name.loc[name];tip=ET.Element(namespace+'title')
-            tip.text=f'{name}: accuracy {row.accuracy*100:.3f}%; speedup {row.speedup:.3f}x; RSS reduction {row.rss_reduction_pct:.1f}%'
-            element.insert(0,tip)
-    svg.write(report/'tradeoffs_all.svg',encoding='utf-8',xml_declaration=True)
+    from experiments.plot_tradeoffs import plot_tradeoffs
+    plot_tradeoffs(chart, report, n_datasets=len(common))
     fig,axes=plt.subplots(1,2,figsize=(11,5),layout='constrained')
     ordered=ab_summary.sort_values('speedup')
     axes[0].barh(ordered.variant,ordered.speedup,color=['#2b8cbe' if v>=1 else '#d95f0e' for v in ordered.speedup])
@@ -318,7 +290,7 @@ def main():
       '## All configurations on the tradeoff curve','',
       f"All eleven original configurations plus the new auto30 candidate appear on the same corrected resample-1 comparison. The chart uses the same first timing run for every configuration and {len(common)} common successful datasets. Six selected finalists additionally have three timing repetitions in the primary table. Non-finalist chart points are descriptive, with one timing run. No chart point is silently replaced with a result from a different kernel version or dataset subset.",'',
       '![All configuration tradeoffs](tradeoffs_all.png)','',
-      'The dashed line is the observed accuracy/runtime Pareto frontier. Every point remains visible, including 10k and HYDRA. The [SVG figure](tradeoffs_all.svg) includes native hover titles with point values.','',
+      'The orange star is the retained 30k blocked-ridge model (`fast30`), not the optional router. Panels (b) and (c) magnify nearby points without jitter. The dotted horizontal line is the corrected 50k reference accuracy; the solid vertical line is 1x speed (no change from reference); the dashed line joins the observed accuracy/speed Pareto frontier. The frontier ignores memory, which also informs the retained choice. Standalone 64-group HYDRA (`hydra64`) and the LSPV+MPV pair (`pair50`, 24,864 columns) are representation controls. The [label mapping](plot_labels.csv) defines every identifier. Use the [vector PDF](tradeoffs_all.pdf) at two-column width; the [SVG](tradeoffs_all.svg) includes point values.','',
       markdown_table(chart[['variant','datasets','accuracy','delta_pp','speedup','rss_reduction_pct']],fmt),'',
       '## ElectricDevices stress','']
     if len(stress):

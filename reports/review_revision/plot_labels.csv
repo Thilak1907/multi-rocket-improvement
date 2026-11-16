@@ -1,0 +1,13 @@
+identifier,label,retained
+baseline50,50k reference,False
+buffered50,50k buffers,False
+fused50,50k sklearn bundle,False
+fast50,50k blocked,False
+fast30,Retained 30k blocked,True
+auto30,30k routed,False
+fused30,30k sklearn,False
+fused20,20k bundle,False
+fused10,10k bundle,False
+pair50,LSPV+MPV pair,False
+hydra64,HYDRA only (64 groups),False
+hybrid20h32,20k + HYDRA (32 groups),False

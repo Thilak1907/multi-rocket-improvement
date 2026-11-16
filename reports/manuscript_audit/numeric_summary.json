@@ -1,0 +1,34 @@
+{
+  "manuscript_sha256": "c438dcbd9a8cd70a35e3961d8990d759830737afec79a67e26a73aea7b978a60",
+  "tables": 4,
+  "cells_checked": 52,
+  "numeric_cells": 51,
+  "all_cells_match": true,
+  "accuracy_delta_pp": -0.1136683756385315,
+  "ci_low_pp": -0.2610814284121263,
+  "ci_high_pp": 0.0410692636123306,
+  "noninferiority_p": 0.0102330251434968,
+  "note": "A matching numeric table does not validate unsupported prose claims or external references.",
+  "evidence": {
+    "corrected_review_jobs": {
+      "ablation": 360,
+      "confirmation": 1320,
+      "accuracy": 330,
+      "stress": 6,
+      "audit": 5
+    },
+    "corrected_review_total": 2021,
+    "alpha_prediction_parity_checks": 275,
+    "ensemble_baseline_hash_matches": 165,
+    "section_iv_record_lines": 1358,
+    "arrowhead_sample_sd_pp": 0.6487385282257685,
+    "arrowhead_seed_min_pct": 85.71428571428571,
+    "arrowhead_seed_max_pct": 88.0,
+    "fix_mean_accuracy_delta_pp": -0.01240688981876371,
+    "fix_min_nonidentical_wilcoxon_p": 0.17971249487899976,
+    "prediction_time_pct": 70.4730990081974,
+    "classifier_fit_time_pct": 9.9277780282176,
+    "starlight_paper50_peak_gb": 6.384484352,
+    "starlight_paper50_peak_gib": 5.946014404296875
+  }
+}

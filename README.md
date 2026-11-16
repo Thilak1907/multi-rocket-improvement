@@ -26,7 +26,17 @@ python -m unittest discover -s tests -v
 
 `requirements-reproduce.txt` pins the numerical packages used for the recorded
 CPU experiments. [Environment details](reproducibility/environment.json) record
-the platform and thread counts. Other platforms can produce different timings
+the platform and thread counts. The main machine has an **Apple M5 CPU, 10
+physical cores / 10 logical CPUs, and 24 GiB RAM**, running macOS 26.5.2. The
+benchmark uses four Numba/Torch threads and one BLAS thread.
+
+The separate Section IV reproduction checks used a **two-vCPU Linux VM reporting
+an Intel Xeon at 2.30 GHz**, with an **8 GB cgroup memory limit**, two
+Numba/OpenMP threads, and one OpenBLAS/MKL thread. Its Python 3.13.18 / Numba
+0.68.1 stack is recorded separately in
+[reproduction/recorded/environment.txt](reproduction/recorded/environment.txt).
+The 8 GB limit describes the VM's constrained workload, not installed host RAM.
+Other platforms can produce different timings
 and small numerical differences. No GPU is required. `requirements.txt` provides
 broader runtime constraints for development.
 
@@ -181,6 +191,15 @@ These are single stress attempts, not measured OS-level OOM events. ElectricDevi
 
 ![Accuracy and speed trade-offs](reports/review_revision/tradeoffs_all.png)
 
+The orange star marks our retained **30k blocked-ridge** configuration. The
+dotted horizontal line is reference accuracy; the solid vertical line is 1×
+speed-up; the dashed line is the accuracy/speed Pareto frontier, which does not
+include memory. The two zoom panels separate nearby points without moving
+them. Standalone HYDRA (64 groups) and the LSPV+MPV operator pair are additional
+controls. See the [label mapping](reports/review_revision/plot_labels.csv).
+For the paper, use the [vector PDF](reports/review_revision/tradeoffs_all.pdf)
+at two-column width.
+
 The chart uses one common timing run for all configurations. Full finalist,
 stage-time, model-size, and per-dataset results are in the
 [corrected report](reports/review_revision/report.md).
@@ -199,8 +218,12 @@ they are not a separate table reported in the paper.
 | Project corrected baseline | 55 | Indices 1–3 | 49,728 | 87.399% |
 | Project retained configuration | 55 | Indices 1–3 | 29,568 | 87.285% |
 
-These use different kernel seeds, feature correctness modes, and resampling
-coverage. They provide context rather than a paired test against the paper.
+At the common index 1 on the same 55 names, the authors' released 50k result
+is **87.987%** versus **87.760%** for our corrected 50k reference, a gap of
+**0.227 percentage points**; kernel seeds and feature alignment differ, while
+the broader accuracy analyses also differ in coverage (30 released resamples
+versus our three). These are contextual comparisons, not a paired superiority
+test against the paper.
 The paper's Table 2 reports 15.77 minutes of 50k training over 112 problems on
 its single-thread setup. Our 1.66× claim uses our own paired baseline; we do
 not divide timings from different hardware, thread counts, and dataset sets.

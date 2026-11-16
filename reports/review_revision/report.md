@@ -99,7 +99,7 @@ All eleven original configurations plus the new auto30 candidate appear on the s
 
 ![All configuration tradeoffs](tradeoffs_all.png)
 
-The dashed line is the observed accuracy/runtime Pareto frontier. Every point remains visible, including 10k and HYDRA. The [SVG figure](tradeoffs_all.svg) includes native hover titles with point values.
+The orange star is the retained 30k blocked-ridge model (`fast30`), not the optional router. Panels (b) and (c) magnify nearby points without jitter. The dotted horizontal line is the corrected 50k reference accuracy; the solid vertical line is 1x speed (no change from reference); the dashed line joins the observed accuracy/speed Pareto frontier. The frontier ignores memory, which also informs the retained choice. Standalone 64-group HYDRA (`hydra64`) and the LSPV+MPV pair (`pair50`, 24,864 columns) are representation controls. The [label mapping](plot_labels.csv) defines every identifier. Use the [vector PDF](tradeoffs_all.pdf) at two-column width; the [SVG](tradeoffs_all.svg) includes point values.
 
 | variant | datasets | accuracy | delta_pp | speedup | rss_reduction_pct |
 | --- | --- | --- | --- | --- | --- |

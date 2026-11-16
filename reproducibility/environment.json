@@ -20,5 +20,33 @@
   "torch_threads": 4,
   "blas_threads": 1,
   "timing": "wall clock; imports, data load, JIT warmup excluded",
-  "memory": "process peak RSS; 9 GiB polling guard"
+  "memory": "process peak RSS; 9 GiB polling guard",
+  "hardware": {
+    "cpu_model": "Apple M5",
+    "model_identifier": "Mac17,3",
+    "physical_cores": 10,
+    "logical_cpus": 10,
+    "ram_bytes": 25769803776,
+    "ram_gib": 24,
+    "ram_decimal_gb": 25.769803776,
+    "verified_on": "2026-11-16",
+    "verification": "sysctl machdep.cpu.brand_string hw.physicalcpu hw.logicalcpu hw.memsize hw.model",
+    "recorded_corroboration": "Earlier CLI CSVs record 10 physical cores, 10 logical CPUs and 26 decimal GB rounded; CPU brand was queried during documentation review."
+  },
+  "second_machine": {
+    "source": "reproduction/recorded/environment.txt",
+    "cpu_description": "Intel Xeon @ 2.30 GHz",
+    "allocated_vcpus": 2,
+    "platform": "Linux VM",
+    "memory_limit": "8 GB cgroup limit (as recorded; exact byte limit not preserved)",
+    "numba_openmp_threads": 2,
+    "openblas_mkl_threads": 1,
+    "python": "3.13.18",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.1",
+    "numba": "0.68.1",
+    "pandas": "3.0.5",
+    "torch": "CPU build; exact version not recorded"
+  }
 }

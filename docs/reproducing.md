@@ -6,11 +6,19 @@ checked-in reports unchanged.
 
 ## 1. Environment and inputs
 
-Use Python 3.11 and `pip install -r requirements-reproduce.txt`. The recorded
-platform is macOS ARM64, with four Numba/Torch threads and one BLAS thread.
+Use Python 3.11 and `pip install -r requirements-reproduce.txt`. The main machine
+is an Apple M5 (Mac17,3), with 10 physical cores, 10 logical CPUs and 24 GiB RAM,
+running macOS 26.5.2. The benchmark uses four Numba/Torch threads and one BLAS thread.
 Linux or other CPUs can change timing, RSS, and floating-point behavior. Exact
 numeric-package versions and measurement conventions are recorded in
 [`environment.json`](../reproducibility/environment.json).
+
+The separate Section IV checks use the recorded two-vCPU Intel Xeon Linux VM
+at 2.30 GHz with an 8 GB cgroup memory limit. They use two Numba/OpenMP threads,
+one OpenBLAS/MKL thread and a different Python/library stack, documented in
+[`reproduction/recorded/environment.txt`](../reproduction/recorded/environment.txt).
+Both legacy and corrected 50k Crop attempts were OOM-killed there. Those kills
+are separate from the main macOS benchmark's 9 GiB guard stops on ElectricDevices.
 
 ```bash
 python scripts/download_data.py --upstream --ucr
@@ -108,6 +116,17 @@ report generator. It includes:
 | ElectricDevices memory behavior | One attempt per finalist, 9 GiB guard | `electricdevices.csv`, `failures.csv` |
 | Legacy replay | Five recorded reference comparisons | `legacy_replay.csv` |
 | Size-routing adoption decision | Frozen gates over the above stages | `decision.json` |
+
+The trade-off plot now uses direct labels, an orange star for retained `fast30`,
+and two unjittered zoom panels. It is exported as PNG, SVG and vector PDF; use
+`figure*` with `width=\textwidth` in the two-column manuscript. The dotted line
+is baseline accuracy, the solid vertical line is 1× speed, and the dashed line
+joins the accuracy/speed Pareto frontier. This frontier does not include memory.
+To regenerate only the figure from its retained table:
+
+```bash
+python -m experiments.plot_tradeoffs
+```
 
 The accuracy profile selects one of three extra views on 54 TRAIN-only selection
 partitions, then evaluates only the frozen winner on 55 datasets and resamples

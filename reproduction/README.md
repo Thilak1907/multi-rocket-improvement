@@ -9,6 +9,21 @@ reruns the four configurations side by side on a second machine.
 The fold-by-fold comparison here covers eight datasets. It does not support a
 full-archive accuracy claim.
 
+## Recorded machine
+
+These checks ran on a Linux VM reporting an Intel Xeon at 2.30 GHz, with two
+allocated vCPUs and an 8 GB cgroup memory limit. The limit is the workload's
+memory allowance, not installed host RAM. Numba/OpenMP used two threads and
+OpenBLAS/MKL one. The stack was Python 3.13.18, NumPy 2.5.3, SciPy 1.18.1,
+scikit-learn 1.9.1, Numba 0.68.1, pandas 3.0.5 and CPU-only Torch; its exact
+Torch version was not recorded. See [environment details](recorded/environment.txt).
+
+This is separate from the main Apple M5 benchmark (10 physical cores, 10 logical
+CPUs, 24 GiB RAM; four Numba/Torch threads and one BLAS thread). On the Linux
+machine, **both `paper50` (legacy) and `fixed50` (corrected)** were killed on
+Crop, with OOM entries in the supplied kernel log. These are not the main
+benchmark's 9 GiB supervisor-guard stops on ElectricDevices.
+
 ## What is here
 
 | File | Purpose |
