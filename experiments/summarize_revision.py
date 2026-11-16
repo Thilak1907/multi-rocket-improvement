@@ -250,7 +250,7 @@ def main():
     ax.set_xlabel('Complete fit + prediction speedup (higher is better)');ax.set_ylabel('Mean test accuracy (%)')
     ax.set_title(f'Corrected kernels: all 11 original configurations + size-based ridge\n{len(common)} common UCR datasets, resample 1, uniform first timing run')
     ax.legend(loc='center left',bbox_to_anchor=(1,0.5),fontsize=9,title='Configuration')
-    fig.savefig(report/'tradeoffs_all.png',dpi=200);fig.savefig(report/'tradeoffs_all.svg');plt.close(fig)
+    fig.savefig(report/'tradeoffs_original_layout.png',dpi=200);fig.savefig(report/'tradeoffs_all.png',dpi=200);fig.savefig(report/'tradeoffs_all.svg');plt.close(fig)
     import xml.etree.ElementTree as ET
     svg=ET.parse(report/'tradeoffs_all.svg');namespace='{http://www.w3.org/2000/svg}'
     by_name=chart.set_index('variant')
@@ -317,7 +317,7 @@ def main():
       f"Folding removed from the candidate: **{choice['folding_removed']}**. No-fold/full ratios: runtime {choice['time_ratio_no_fold']:.4f}, paired RSS {choice['rss_ratio_no_fold']:.4f}, model size {choice['model_ratio_no_fold']:.4f}. Exact prediction/alpha parity across ablation jobs: {choice['exact_ablation_parity']}. The choice rule was frozen before confirmation. Buffered extraction, in-place processing and chunking remain enabled; their isolated costs are visible above.",'',
       '## All configurations on the tradeoff curve','',
       f"All eleven original configurations plus the new auto30 candidate appear on the same corrected resample-1 comparison. The chart uses the same first timing run for every configuration and {len(common)} common successful datasets. Six selected finalists additionally have three timing repetitions in the primary table. Non-finalist chart points are descriptive, with one timing run. No chart point is silently replaced with a result from a different kernel version or dataset subset.",'',
-      '![All configuration tradeoffs](tradeoffs_all.png)','',
+      '![All configuration tradeoffs](tradeoffs_original_layout.png)','',
       'The dashed line is the observed accuracy/runtime Pareto frontier. Every point remains visible, including 10k and HYDRA. The [SVG figure](tradeoffs_all.svg) includes native hover titles with point values.','',
       markdown_table(chart[['variant','datasets','accuracy','delta_pp','speedup','rss_reduction_pct']],fmt),'',
       '## ElectricDevices stress','']

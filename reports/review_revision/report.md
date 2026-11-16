@@ -97,7 +97,7 @@ Folding removed from the candidate: **False**. No-fold/full ratios: runtime 1.01
 
 All eleven original configurations plus the new auto30 candidate appear on the same corrected resample-1 comparison. The chart uses the same first timing run for every configuration and 55 common successful datasets. Six selected finalists additionally have three timing repetitions in the primary table. Non-finalist chart points are descriptive, with one timing run. No chart point is silently replaced with a result from a different kernel version or dataset subset.
 
-![All configuration tradeoffs](tradeoffs_all.png)
+![All configuration tradeoffs](tradeoffs_original_layout.png)
 
 The dashed line is the observed accuracy/runtime Pareto frontier. Every point remains visible, including 10k and HYDRA. The [SVG figure](tradeoffs_all.svg) includes native hover titles with point values.
 

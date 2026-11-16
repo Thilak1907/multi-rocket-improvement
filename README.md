@@ -189,7 +189,7 @@ ElectricDevices completed with fixed 30k in **70.50 s at 6.32 GiB**. The 50k and
 These are single stress attempts, not measured OS-level OOM events. ElectricDevices is outside the
 55-dataset aggregate.
 
-![Accuracy and speed trade-offs](reports/review_revision/tradeoffs_all.png)
+![Accuracy and speed trade-offs](reports/review_revision/tradeoffs_original_layout.png)
 
 The plot uses the original configuration IDs: `fast30` is the retained
 30k blocked-ridge model; `auto30` (the star) is the optional routing experiment.
